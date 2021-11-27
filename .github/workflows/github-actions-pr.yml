@@ -1,5 +1,5 @@
 name: GitHub Actions PR
-on: [push]
+on: [pull_request]
 jobs:
   build:
   
