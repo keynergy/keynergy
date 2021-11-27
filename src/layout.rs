@@ -8,7 +8,7 @@ use std::io::{self, BufRead};
 pub type Finger = u8;
 
 #[derive(Debug)]
-// Layout is a struct that stores basic key data about a layout, as well as its metadata
+/// Struct that stores basic key data about a layout, as well as its metadata.
 pub struct Layout {
     pub name: String,
     pub author: String,
@@ -19,7 +19,7 @@ pub struct Layout {
     pub anchor: Pos,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum LayoutError {
     NotFoundError,
     FormatError,
@@ -42,7 +42,11 @@ impl From<io::Error> for LayoutError {
     }
 }
 
-// load_layout turns a layout file into a Layout
+/// Reads a layout file and parses it into a Layout.
+/// ```rust
+/// let l = keynergy::layout::load_layout("testdata/semimak_jq.layout".to_string()).unwrap();
+/// assert_eq!(l.name, "Semimak JQ");
+/// ```
 pub fn load_layout(path: String) -> Result<Layout, LayoutError> {
     // read file
     let file = File::open(path).map_err(|_| LayoutError::NotFoundError)?;
@@ -53,12 +57,14 @@ pub fn load_layout(path: String) -> Result<Layout, LayoutError> {
     if lines.len() < 8 {
         return Err(LayoutError::FormatError);
     }
-    
+
     // get metadata
     let name = lines[0].as_ref().unwrap();
     let author = lines[1].as_ref().unwrap();
     let link = lines[2].as_ref().unwrap();
-    let year = lines[3].as_ref().unwrap()
+    let year = lines[3]
+        .as_ref()
+        .unwrap()
         .parse::<u32>()
         .map_err(|_| LayoutError::FormatError)?;
 
@@ -68,35 +74,35 @@ pub fn load_layout(path: String) -> Result<Layout, LayoutError> {
 
     // read layout block
     for l in &lines[5..] {
-        let line = l.as_ref().unwrap().trim(); 
+        let line = l.as_ref().unwrap().trim();
         if line == "" {
-	    // in .layout files, the end of the layout block is denoted by a blank line
-            break
+            // in .layout files, the end of the layout block is denoted by a blank line
+            break;
         }
-	keys.push(Vec::new());
-	let row = keys.len()-1;
-	let mut col = 0;
-	for w in line.split(' ') {
-	    let c = w.chars().nth(0).unwrap(); // get first char, in case there are more than one
-	    keys[row].push(c);
-	    keymap.insert(c, (col, row as u8));
-	    col += 1;
-	}
+        keys.push(Vec::new());
+        let row = keys.len() - 1;
+        let mut col = 0;
+        for w in line.split(' ') {
+            let c = w.chars().nth(0).unwrap(); // get first char, in case there are more than one
+            keys[row].push(c);
+            keymap.insert(c, (col, row as u8));
+            col += 1;
+        }
     }
-    let anchorkey = lines[lines.len()-1]
-	.as_ref()
-	.unwrap()
-	.chars()
-	.nth(0)
-	.unwrap();
+    let anchorkey = lines[lines.len() - 1]
+        .as_ref()
+        .unwrap()
+        .chars()
+        .nth(0)
+        .unwrap();
     let anchor = keymap[&anchorkey];
-    Ok(Layout{
-	name: name.clone(),
-	author: author.clone(),
-	link: link.clone(),
-	year: year.clone(),
-	keymatrix: keys,
-	keymap: keymap,
-	anchor: anchor
+    Ok(Layout {
+        name: name.clone(),
+        author: author.clone(),
+        link: link.clone(),
+        year: year.clone(),
+        keymatrix: keys,
+        keymap: keymap,
+        anchor: anchor,
     })
 }
