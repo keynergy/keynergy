@@ -1,6 +1,7 @@
 pub mod layout;
+pub mod keyboard;
 
-// Represents (x, y) or (col, row)
+/// Represents (x, y) or (col, row)
 pub type Pos = (u8, u8);
 
 #[cfg(test)]
