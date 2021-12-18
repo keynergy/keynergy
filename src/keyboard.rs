@@ -1,5 +1,5 @@
-use crate::layout;
-use crate::Pos;
+//use crate::layout;
+//use crate::Pos;
 
 /// describes a physical keyboard and its properties
 pub struct Keyboard {
@@ -9,7 +9,9 @@ pub struct Keyboard {
     /// how staggered each column is, in cm
     pub colstagger: Vec<f32>,
     /// number of (cols, rows)
-    pub dimensions: (u8, u8),
+    pub dimensions: [u8; 2],
     /// how tall each key is, in cm
     pub keyheight: f64,
+    /// how wide each key is, in cm
+    pub keywidth: f64,
 }
