@@ -30,8 +30,8 @@ mod layout_tests {
         assert_eq!(semimak_jq.link, "https://semilin.github.io/semimak");
         assert_eq!(semimak_jq.year, 2021);
         assert_eq!(semimak_jq.keys.matrix[0][0], 'f');
-        assert_eq!(semimak_jq.keys.map[&'l'], Pos { col: 1, row: 0 });
-        assert_eq!(semimak_jq.anchor, Pos { col: 0, row: 1 });
+        assert_eq!(semimak_jq.keys.map[&'l'], Pos::new(1, 0));
+        assert_eq!(semimak_jq.anchor, Pos::new(0, 1));
         let mut y = 0;
         for row in &semimak_jq.keys.matrix {
             let mut x = 0;
@@ -45,20 +45,16 @@ mod layout_tests {
     #[test]
     fn keys_swap() {
         let mut semimak_jq = Layout::load("testdata/semimak_jq.layout".to_string()).unwrap();
-        semimak_jq
-            .keys
-            .swap(&[Pos { col: 0, row: 0 }, Pos { col: 1, row: 0 }]);
+        semimak_jq.keys.swap(&[Pos::new(0, 0), Pos::new(1, 0)]);
         assert_eq!(semimak_jq.keys.matrix[0][0], 'l');
         assert_eq!(semimak_jq.keys.matrix[0][1], 'f');
-        assert_eq!(semimak_jq.keys.map[&'l'], Pos { col: 0, row: 0 });
-        assert_eq!(semimak_jq.keys.map[&'f'], Pos { col: 1, row: 0 });
+        assert_eq!(semimak_jq.keys.map[&'l'], Pos::new(0, 0));
+        assert_eq!(semimak_jq.keys.map[&'f'], Pos::new(1, 0));
 
-        semimak_jq
-            .keys
-            .swap(&[Pos { col: 3, row: 0 }, Pos { col: 2, row: 1 }]);
+        semimak_jq.keys.swap(&[Pos::new(3, 0), Pos::new(2, 1)]);
         assert_eq!(semimak_jq.keys.matrix[0][3], 'n');
         assert_eq!(semimak_jq.keys.matrix[1][2], 'v');
-        assert_eq!(semimak_jq.keys.map[&'n'], Pos { col: 3, row: 0 });
-        assert_eq!(semimak_jq.keys.map[&'v'], Pos { col: 2, row: 1 });
+        assert_eq!(semimak_jq.keys.map[&'n'], Pos::new(3, 0));
+        assert_eq!(semimak_jq.keys.map[&'v'], Pos::new(2, 1));
     }
 }
