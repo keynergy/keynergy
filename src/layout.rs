@@ -91,8 +91,14 @@ impl Layout {
             let row = keys.len() - 1;
             for (col, w) in line.split(' ').enumerate() {
                 let c = w.chars().next().unwrap(); // get first char, in case there are more than one
-		keys[row].push(c);
-                keymap.insert(c, Pos{col: col as u8, row: row as u8});	
+                keys[row].push(c);
+                keymap.insert(
+                    c,
+                    Pos {
+                        col: col as u8,
+                        row: row as u8,
+                    },
+                );
             }
         }
         let anchorkey = lines[lines.len() - 1]
@@ -100,56 +106,58 @@ impl Layout {
             .unwrap()
             .chars()
             .next()
-	    .unwrap();
-	let anchor = keymap[&anchorkey];
-	Ok(Layout {
-	    name: name.clone(),
-	    author: author.clone(),
-	    link: link.clone(),
-	    year,
-	    keys: Keys {
-		matrix: keys,
-		map: keymap,
-	    },
-	    anchor
-	})
+            .unwrap();
+        let anchor = keymap[&anchorkey];
+        Ok(Layout {
+            name: name.clone(),
+            author: author.clone(),
+            link: link.clone(),
+            year,
+            keys: Keys {
+                matrix: keys,
+                map: keymap,
+            },
+            anchor,
+        })
     }
 }
 
 impl Keys {
     pub fn has_pos(&self, p: Pos) -> bool {
-	#[allow(clippy::collapsible_if)]
-	if self.matrix.len() > p.row as usize {
-	    if self.matrix[p.row as usize].len() > p.col as usize {
-		return true
-	    }
-	}
-	false
+        #[allow(clippy::collapsible_if)]
+        if self.matrix.len() > p.row as usize {
+            if self.matrix[p.row as usize].len() > p.col as usize {
+                return true;
+            }
+        }
+        false
     }
-    
+
     pub fn pos_key(&self, p: Pos) -> &char {
-	&self.matrix[p.row as usize][p.col as usize]
+        &self.matrix[p.row as usize][p.col as usize]
     }
-    
+
     pub fn swap(&mut self, p: &PosPair) {
         if p[0].row == p[1].row {
-	    self.matrix[p[0].row as usize].swap(p[0].col as usize, p[1].col as usize)
-	} else {
-	    let gtr: &Pos;
-	    let lsr: &Pos;
-	    if p[0].row > p[1].row {
-		gtr = &p[0];
-		lsr = &p[1];
-	    } else {
-		gtr = &p[1];
-		lsr = &p[0];
-	    }
-	    let (l, r) = self.matrix.split_at_mut(gtr.row as usize);
-	    mem::swap(&mut l[lsr.row as usize][lsr.col as usize], &mut r[(gtr.row - lsr.row - 1) as usize][gtr.col as usize])
-	}
+            self.matrix[p[0].row as usize].swap(p[0].col as usize, p[1].col as usize)
+        } else {
+            let gtr: &Pos;
+            let lsr: &Pos;
+            if p[0].row > p[1].row {
+                gtr = &p[0];
+                lsr = &p[1];
+            } else {
+                gtr = &p[1];
+                lsr = &p[0];
+            }
+            let (l, r) = self.matrix.split_at_mut(gtr.row as usize);
+            mem::swap(
+                &mut l[lsr.row as usize][lsr.col as usize],
+                &mut r[(gtr.row - lsr.row - 1) as usize][gtr.col as usize],
+            )
+        }
 
-	self.map.insert(*self.pos_key(p[0]), p[0]);
-	self.map.insert(*self.pos_key(p[1]), p[1]);
+        self.map.insert(*self.pos_key(p[0]), p[0]);
+        self.map.insert(*self.pos_key(p[1]), p[1]);
     }
 }
-
