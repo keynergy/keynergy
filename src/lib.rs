@@ -1,6 +1,7 @@
 pub mod analysis;
 pub mod keyboard;
 pub mod layout;
+pub mod lisp;
 
 #[derive(Default, Debug, Clone, Copy, std::cmp::PartialEq)]
 pub struct Pos {
@@ -32,6 +33,7 @@ mod layout_tests {
         assert_eq!(semimak_jq.keys.matrix[0][0], 'f');
         assert_eq!(semimak_jq.keys.map[&'l'], Pos::new(1, 0));
         assert_eq!(semimak_jq.anchor, Pos::new(0, 1));
+	// check that map aligns with matrix
         let mut y = 0;
         for row in &semimak_jq.keys.matrix {
             let mut x = 0;

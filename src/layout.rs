@@ -7,14 +7,15 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::mem;
 
-pub type Finger = u8;
-
 #[derive(Debug)]
 /// Wraps key data with the layout's metadata.
 pub struct Layout {
     pub name: String,
+    /// Name of the creator of the layout
     pub author: String,
+    /// Link to the layout's web page
     pub link: String,
+    /// Year that the layout was released in
     pub year: u32,
     pub keys: Keys,
     pub anchor: Pos,
