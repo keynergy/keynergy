@@ -1,7 +1,6 @@
 pub mod analysis;
 pub mod keyboard;
 pub mod layout;
-pub mod lisp;
 
 #[derive(Default, Debug, Clone, Copy, std::cmp::PartialEq)]
 pub struct Pos {
