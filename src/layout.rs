@@ -84,7 +84,7 @@ impl Keys {
 impl Layout {
     /// Reads a layout file and parses it into a Layout.
     /// ```rust
-    /// let l = keynergy::layout::Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
+    /// let l = keynergy::layout::Layout::load("testdata/semimak_jq.toml").unwrap();
     /// assert_eq!(l.name, "Semimak JQ");
     /// ```
     pub fn load(path: &str) -> Result<Layout, LayoutError> {
