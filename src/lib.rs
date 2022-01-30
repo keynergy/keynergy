@@ -1,8 +1,9 @@
 pub mod analysis;
 pub mod keyboard;
 pub mod layout;
+use serde::Deserialize;
 
-#[derive(Default, Debug, Clone, Copy, std::cmp::PartialEq)]
+#[derive(Deserialize, Default, Debug, Clone, Copy, std::cmp::PartialEq)]
 pub struct Pos {
     col: u8,
     row: u8,
@@ -24,20 +25,23 @@ mod layout_tests {
     use crate::Pos;
     #[test]
     fn load_layout() {
-        let semimak_jq = Layout::load("testdata/semimak_jq.layout".to_string()).unwrap();
+        let semimak_jq = Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
         assert_eq!(semimak_jq.name, "Semimak JQ");
         assert_eq!(semimak_jq.author, "semi");
-        assert_eq!(semimak_jq.link, "https://semilin.github.io/semimak");
+        assert_eq!(
+            semimak_jq.link.unwrap(),
+            "https://semilin.github.io/semimak"
+        );
         assert_eq!(semimak_jq.year, 2021);
-        assert_eq!(semimak_jq.keys.matrix[0][0], 'f');
-        assert_eq!(semimak_jq.keys.map[&'l'], Pos::new(1, 0));
-        assert_eq!(semimak_jq.anchor, Pos::new(0, 1));
-	// check that map aligns with matrix
+        let keys = semimak_jq.formats.standard.unwrap();
+        assert_eq!(keys.matrix[0][0], 'f');
+        assert_eq!(keys.map[&'l'], Pos::new(1, 0));
+        // check that map aligns with matrix
         let mut y = 0;
-        for row in &semimak_jq.keys.matrix {
+        for row in &keys.matrix {
             let mut x = 0;
             for key in row {
-                assert_eq!(*key, semimak_jq.keys.matrix[y][x]);
+                assert_eq!(*key, keys.matrix[y][x]);
                 x += 1;
             }
             y += 1;
@@ -45,17 +49,18 @@ mod layout_tests {
     }
     #[test]
     fn keys_swap() {
-        let mut semimak_jq = Layout::load("testdata/semimak_jq.layout".to_string()).unwrap();
-        semimak_jq.keys.swap(&[Pos::new(0, 0), Pos::new(1, 0)]);
-        assert_eq!(semimak_jq.keys.matrix[0][0], 'l');
-        assert_eq!(semimak_jq.keys.matrix[0][1], 'f');
-        assert_eq!(semimak_jq.keys.map[&'l'], Pos::new(0, 0));
-        assert_eq!(semimak_jq.keys.map[&'f'], Pos::new(1, 0));
+        let semimak_jq = Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
+        let mut keys = semimak_jq.formats.standard.unwrap();
+        keys.swap(&[Pos::new(0, 0), Pos::new(1, 0)]);
+        assert_eq!(keys.matrix[0][0], 'l');
+        assert_eq!(keys.matrix[0][1], 'f');
+        assert_eq!(keys.map[&'l'], Pos::new(0, 0));
+        assert_eq!(keys.map[&'f'], Pos::new(1, 0));
 
-        semimak_jq.keys.swap(&[Pos::new(3, 0), Pos::new(2, 1)]);
-        assert_eq!(semimak_jq.keys.matrix[0][3], 'n');
-        assert_eq!(semimak_jq.keys.matrix[1][2], 'v');
-        assert_eq!(semimak_jq.keys.map[&'n'], Pos::new(3, 0));
-        assert_eq!(semimak_jq.keys.map[&'v'], Pos::new(2, 1));
+        keys.swap(&[Pos::new(3, 0), Pos::new(2, 1)]);
+        assert_eq!(keys.matrix[0][3], 'n');
+        assert_eq!(keys.matrix[1][2], 'v');
+        assert_eq!(keys.map[&'n'], Pos::new(3, 0));
+        assert_eq!(keys.map[&'v'], Pos::new(2, 1));
     }
 }

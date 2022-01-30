@@ -1,20 +1,19 @@
-use crate::layout;
 use crate::Pos;
 use std::collections::HashMap;
 
-#[derive(PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Hand {
   L,
   R,
 }
 
-#[derive(PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum Finger {
-  T(Hand),
-  I(Hand),
-  M(Hand),
-  R(Hand),
-  P(Hand),
+    T(Hand),
+    I(Hand),
+    M(Hand),
+    R(Hand),
+    P(Hand),
 }
 
 pub struct Fingermap {

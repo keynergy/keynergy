@@ -1,26 +1,36 @@
-use crate::keyboard::{self, Finger, Keyboard};
-use crate::layout::{self, Layout};
-use crate::Pos;
+//use std::collections::HashMap;
 
-pub enum Direction {
-  Inward,
-  Outward,
-  None,
+use crate::keyboard::{Finger, Keyboard};
+//use crate::layout::{self, Layout};
+//use crate::Pos;
+//use rhai::{Engine, EvalAltResult, INT};
+
+#[derive(Debug, Clone)]
+pub struct Metric {
+    name: String,
+    count: u64,
+    amount: f64,
 }
 
-pub fn distance(a: Pos, b: Pos) -> f64 {
-  let yd: f64 = ((a.row as i8 - b.row as i8).abs()).into();
-  let xd: f64 = ((a.col as i8 - b.col as i8).abs()).into();
-
-  ((yd+xd)*(yd+xd)).sqrt()
+#[derive(Debug, Clone)]
+pub enum Direction {
+    Inward,
+    Outward,
+    None,
 }
 
 pub fn direction(a: Finger, b: Finger) -> Direction {
-  if b < a {
-    Direction::Inward
-  } else if a < b {
-    Direction::Outward
-  } else {
-    Direction::None
-  }
+    if b < a {
+        Direction::Inward
+    } else if a < b {
+        Direction::Outward
+    } else {
+        Direction::None
+    }
+}
+
+impl Keyboard {
+    /*pub fn xdist(&self, a: &Pos, b: &Pos) -> f64 {
+
+}*/
 }
