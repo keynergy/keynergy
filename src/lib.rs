@@ -25,7 +25,7 @@ mod layout_tests {
     use crate::Pos;
     #[test]
     fn load_layout() {
-        let semimak_jq = Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
+        let semimak_jq = Layout::load("testdata/semimak_jq.toml").unwrap();
         assert_eq!(semimak_jq.name, "Semimak JQ");
         assert_eq!(semimak_jq.author, "semi");
         assert_eq!(
@@ -49,7 +49,7 @@ mod layout_tests {
     }
     #[test]
     fn keys_swap() {
-        let semimak_jq = Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
+        let semimak_jq = Layout::load("testdata/semimak_jq.toml").unwrap();
         let mut keys = semimak_jq.formats.standard.unwrap();
         keys.swap(&[Pos::new(0, 0), Pos::new(1, 0)]);
         assert_eq!(keys.matrix[0][0], 'l');
