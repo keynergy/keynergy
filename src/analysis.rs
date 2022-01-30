@@ -20,12 +20,15 @@ pub enum Direction {
 }
 
 pub fn direction(a: Finger, b: Finger) -> Direction {
-    if b < a {
-        Direction::Inward
-    } else if a < b {
-        Direction::Outward
-    } else {
+    if a.hand != b.hand {
         Direction::None
+    } else {
+        use std::cmp::Ordering::*;
+        match a.kind.cmp(&b.kind) {
+            Less => Direction::Outward,
+            Equal => Direction::None,
+            Greater => Direction::Inward,
+        }
     }
 }
 
