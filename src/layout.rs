@@ -87,7 +87,7 @@ impl Layout {
     /// let l = keynergy::layout::Layout::load("testdata/semimak_jq.toml".to_string()).unwrap();
     /// assert_eq!(l.name, "Semimak JQ");
     /// ```
-    pub fn load(path: String) -> Result<Layout, LayoutError> {
+    pub fn load(path: &str) -> Result<Layout, LayoutError> {
         // read file
         let file = fs::read_to_string(path)?;
         let result = toml::from_str(&file);
@@ -96,7 +96,10 @@ impl Layout {
         // TODO make this less redundant
         layout.formats.standard.as_mut().map(|l| l.fill_map());
         layout.formats.angle.as_mut().map(|l| l.fill_map());
-        Ok(layout)
+	if layout.link == Some("".to_string()) {
+	    layout.link = None;
+	}
+	Ok(layout)
     }
 }
 
