@@ -28,7 +28,7 @@ pub enum FingerKind {
     Pinky,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Direction {
     Inward,
     Outward,
@@ -71,6 +71,14 @@ impl Keyboard {
     }
 }
 
+/// Returns the Direction from finger a to finger b.
+/// ```rust
+/// use keynergy::keyboard::{Finger, Hand, FingerKind, Direction, direction};
+/// let ri = Finger::new(Hand::Right, FingerKind::Index);
+/// let rm = Finger::new(Hand::Right, FingerKind::Middle);
+/// assert_eq!(Direction::Inward, direction(rm, ri));
+/// assert_eq!(Direction::Outward, direction(ri, rm));
+///```
 pub fn direction(a: Finger, b: Finger) -> Direction {
     if a.hand != b.hand {
         Direction::None
@@ -123,5 +131,16 @@ mod tests {
 
         assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 1)), 1.25);
         assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 2)), 1.75);
+    }
+    #[test]
+    fn direction() {
+	use crate::keyboard::{Finger, Hand, FingerKind, Direction, direction};
+	let ri = Finger::new(Hand::Right, FingerKind::Index);
+	let rm = Finger::new(Hand::Right, FingerKind::Middle);
+	let li = Finger::new(Hand::Left, FingerKind::Index);
+	assert_eq!(Direction::Inward, direction(rm, ri));
+	assert_eq!(Direction::Outward, direction(ri, rm));
+	assert_eq!(Direction::None, direction(ri, li));
+	assert_eq!(Direction::None, direction(ri, ri));
     }
 }
