@@ -10,6 +10,7 @@ pub struct Pos {
 }
 
 impl Pos {
+    /// Constructs a pos: (col, row) || (x, y)
     pub fn new(col: u8, row: u8) -> Pos {
         Pos { col, row }
     }

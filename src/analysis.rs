@@ -1,9 +1,4 @@
-//use std::collections::HashMap;
-
-use crate::keyboard::{Finger, Keyboard};
-//use crate::layout::{self, Layout};
-//use crate::Pos;
-//use rhai::{Engine, EvalAltResult, INT};
+use crate::keyboard::Finger;
 
 #[derive(Debug, Clone)]
 pub struct Metric {
@@ -30,10 +25,4 @@ pub fn direction(a: Finger, b: Finger) -> Direction {
             Greater => Direction::Inward,
         }
     }
-}
-
-impl Keyboard {
-    /*pub fn xdist(&self, a: &Pos, b: &Pos) -> f64 {
-
-}*/
 }
