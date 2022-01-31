@@ -96,10 +96,10 @@ impl Layout {
         // TODO make this less redundant
         layout.formats.standard.as_mut().map(|l| l.fill_map());
         layout.formats.angle.as_mut().map(|l| l.fill_map());
-	if layout.link == Some("".to_string()) {
-	    layout.link = None;
-	}
-	Ok(layout)
+        if layout.link == Some("".to_string()) {
+            layout.link = None;
+        }
+        Ok(layout)
     }
 }
 
@@ -188,4 +188,3 @@ mod tests {
         assert_eq!(keys.map[&'v'], Pos::new(2, 1));
     }
 }
-

@@ -45,16 +45,15 @@ pub struct Keyboard {
     pub fingers: Fingermap,
 }
 
-
 impl Keyboard {
     pub fn xdist(&self, a: &Pos, b: &Pos) -> f64 {
         ((self.rowstagger[a.row as usize] + a.col as f64)
-         - (self.rowstagger[b.row as usize] + b.col as f64))
+            - (self.rowstagger[b.row as usize] + b.col as f64))
             .abs()
     }
     pub fn ydist(&self, a: &Pos, b: &Pos) -> f64 {
         ((self.colstagger[a.col as usize] + a.row as f64)
-         - (self.colstagger[b.col as usize] + b.row as f64))
+            - (self.colstagger[b.col as usize] + b.row as f64))
             .abs()
     }
 }
@@ -81,21 +80,21 @@ mod tests {
                 map: HashMap::new(),
             },
         };
-        assert_eq!(matrix.xdist(&Pos::new(0,0), &Pos::new(1, 0)), 1.0);
-	// shouldn't have any horizontal distance
+        assert_eq!(matrix.xdist(&Pos::new(0, 0), &Pos::new(1, 0)), 1.0);
+        // shouldn't have any horizontal distance
         assert_eq!(matrix.xdist(&Pos::new(0, 0), &Pos::new(0, 1)), 0.0);
 
-	assert_eq!(matrix.ydist(&Pos::new(0,0), &Pos::new(0, 2)), 2.0);
-	// shouldn't have any vertical distance
-	assert_eq!(matrix.ydist(&Pos::new(0,0), &Pos::new(2, 0)), 0.0);
+        assert_eq!(matrix.ydist(&Pos::new(0, 0), &Pos::new(0, 2)), 2.0);
+        // shouldn't have any vertical distance
+        assert_eq!(matrix.ydist(&Pos::new(0, 0), &Pos::new(2, 0)), 0.0);
 
-	let mut ansi = matrix.clone();
-	ansi.rowstagger = vec![-0.25, 0.0, 0.5];
-	assert_eq!(ansi.xdist(&Pos::new(0,0), &Pos::new(1,0)), 1.0);
-	assert_eq!(ansi.xdist(&Pos::new(0,1), &Pos::new(1,1)), 1.0);
-	assert_eq!(ansi.xdist(&Pos::new(0,2), &Pos::new(1,2)), 1.0);
-	
-	assert_eq!(ansi.xdist(&Pos::new(0,0), &Pos::new(1,1)), 1.25);
-	assert_eq!(ansi.xdist(&Pos::new(0,0), &Pos::new(1,2)), 1.75);
+        let mut ansi = matrix.clone();
+        ansi.rowstagger = vec![-0.25, 0.0, 0.5];
+        assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 0)), 1.0);
+        assert_eq!(ansi.xdist(&Pos::new(0, 1), &Pos::new(1, 1)), 1.0);
+        assert_eq!(ansi.xdist(&Pos::new(0, 2), &Pos::new(1, 2)), 1.0);
+
+        assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 1)), 1.25);
+        assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 2)), 1.75);
     }
 }
