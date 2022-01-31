@@ -7,6 +7,24 @@ pub struct Finger {
     pub kind: FingerKind,
 }
 
+impl Finger {
+    pub fn new(hand: Hand, kind: FingerKind) -> Finger {
+	Finger { hand, kind }
+    }
+    /// Returns the direction between self and the argument f.
+    /// ```rust
+    /// use keynergy::keyboard::{Finger, Hand, FingerKind, Direction};
+    /// let ri = Finger::new(Hand::Right, FingerKind::Index);
+    /// let rm = Finger::new(Hand::Right, FingerKind::Middle);
+    /// assert_eq!(Direction::Outward, ri.dir_to(rm));
+    /// assert_eq!(Direction::Inward, rm.dir_to(ri));
+    /// assert_eq!(Direction::None, ri.dir_to(ri));
+    /// ```
+    pub fn dir_to(self, f: Finger) -> Direction {
+	direction(self, f)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Hand {
     Left,
@@ -20,6 +38,13 @@ pub enum FingerKind {
     Middle,
     Ring,
     Pinky,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Direction {
+    Inward,
+    Outward,
+    None,
 }
 
 #[derive(Clone)]
@@ -57,6 +82,28 @@ impl Keyboard {
             .abs()
     }
 }
+
+/// Returns the Direction from finger a to finger b.
+/// ```rust
+/// use keynergy::keyboard::{Finger, Hand, FingerKind, Direction, direction};
+/// let ri = Finger::new(Hand::Right, FingerKind::Index);
+/// let rm = Finger::new(Hand::Right, FingerKind::Middle);
+/// assert_eq!(Direction::Inward, direction(rm, ri));
+/// assert_eq!(Direction::Outward, direction(ri, rm));
+///```
+pub fn direction(a: Finger, b: Finger) -> Direction {
+    if a.hand != b.hand {
+        Direction::None
+    } else {
+        use std::cmp::Ordering::*;
+        match a.kind.cmp(&b.kind) {
+            Less => Direction::Outward,
+            Equal => Direction::None,
+            Greater => Direction::Inward,
+        }
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -96,5 +143,16 @@ mod tests {
 
         assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 1)), 1.25);
         assert_eq!(ansi.xdist(&Pos::new(0, 0), &Pos::new(1, 2)), 1.75);
+    }
+    #[test]
+    fn direction() {
+	use crate::keyboard::{Finger, Hand, FingerKind, Direction, direction};
+	let ri = Finger::new(Hand::Right, FingerKind::Index);
+	let rm = Finger::new(Hand::Right, FingerKind::Middle);
+	let li = Finger::new(Hand::Left, FingerKind::Index);
+	assert_eq!(Direction::Inward, direction(rm, ri));
+	assert_eq!(Direction::Outward, direction(ri, rm));
+	assert_eq!(Direction::None, direction(ri, li));
+	assert_eq!(Direction::None, direction(ri, ri));
     }
 }
