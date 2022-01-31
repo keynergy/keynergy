@@ -7,6 +7,12 @@ pub struct Finger {
     pub kind: FingerKind,
 }
 
+impl Finger {
+    pub fn new(hand: Hand, kind: FingerKind) -> Finger {
+	Finger { hand, kind }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Hand {
     Left,
