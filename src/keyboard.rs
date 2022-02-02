@@ -9,7 +9,7 @@ pub struct Finger {
 
 impl Finger {
     pub fn new(hand: Hand, kind: FingerKind) -> Finger {
-	Finger { hand, kind }
+        Finger { hand, kind }
     }
     /// Returns the direction between self and the argument f.
     /// ```rust
@@ -21,7 +21,7 @@ impl Finger {
     /// assert_eq!(Direction::None, ri.dir_to(ri));
     /// ```
     pub fn dir_to(self, f: Finger) -> Direction {
-	direction(self, f)
+        direction(self, f)
     }
 }
 
@@ -65,8 +65,6 @@ pub struct Keyboard {
     pub dimensions: [u8; 2],
     /// how tall each key is, in units
     pub keyheight: f64,
-    /// how wide each key is, in units
-    pub keywidth: f64,
     pub fingers: Fingermap,
 }
 
@@ -104,7 +102,6 @@ pub fn direction(a: Finger, b: Finger) -> Direction {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::{
@@ -121,7 +118,6 @@ mod tests {
             colstagger: vec![0.0, 0.0, 0.0],
             dimensions: [10, 3],
             keyheight: 1.0,
-            keywidth: 1.0,
             fingers: Fingermap {
                 matrix: vec![vec![]],
                 map: HashMap::new(),
@@ -146,13 +142,13 @@ mod tests {
     }
     #[test]
     fn direction() {
-	use crate::keyboard::{Finger, Hand, FingerKind, Direction, direction};
-	let ri = Finger::new(Hand::Right, FingerKind::Index);
-	let rm = Finger::new(Hand::Right, FingerKind::Middle);
-	let li = Finger::new(Hand::Left, FingerKind::Index);
-	assert_eq!(Direction::Inward, direction(rm, ri));
-	assert_eq!(Direction::Outward, direction(ri, rm));
-	assert_eq!(Direction::None, direction(ri, li));
-	assert_eq!(Direction::None, direction(ri, ri));
+        use crate::keyboard::{direction, Direction, Finger, FingerKind, Hand};
+        let ri = Finger::new(Hand::Right, FingerKind::Index);
+        let rm = Finger::new(Hand::Right, FingerKind::Middle);
+        let li = Finger::new(Hand::Left, FingerKind::Index);
+        assert_eq!(Direction::Inward, direction(rm, ri));
+        assert_eq!(Direction::Outward, direction(ri, rm));
+        assert_eq!(Direction::None, direction(ri, li));
+        assert_eq!(Direction::None, direction(ri, ri));
     }
 }
