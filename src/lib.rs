@@ -2,6 +2,8 @@ pub mod analysis;
 pub mod keyboard;
 pub mod layout;
 use serde::Deserialize;
+pub use layout::{Layout, Keys, Formats};
+pub use keyboard::{Keyboard, Finger, Hand, FingerKind, Fingermap, Direction};
 
 #[derive(Deserialize, Default, Debug, Clone, Copy, std::cmp::PartialEq)]
 pub struct Pos {
