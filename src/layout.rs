@@ -9,13 +9,13 @@ use std::io;
 use std::mem;
 use toml;
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct Formats {
     pub standard: Option<Keys>,
     pub angle: Option<Keys>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 /// Wraps key data with the layout's metadata.
 pub struct Layout {
     pub name: String,
@@ -28,7 +28,7 @@ pub struct Layout {
     pub formats: Formats,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct Keys {
     pub matrix: Vec<Vec<char>>,
     pub map: HashMap<char, Pos>,
@@ -84,7 +84,7 @@ impl Keys {
 impl Layout {
     /// Reads a layout file and parses it into a Layout.
     /// ```rust
-    /// let l = keynergy::layout::Layout::load("testdata/semimak_jq.toml").unwrap();
+    /// let l = keynergy::Layout::load("testdata/semimak_jq.toml").unwrap();
     /// assert_eq!(l.name, "Semimak JQ");
     /// ```
     pub fn load(path: &str) -> Result<Layout, LayoutError> {
@@ -145,7 +145,7 @@ impl Keys {
 
 #[cfg(test)]
 mod tests {
-    use crate::layout::Layout;
+    use crate::Layout;
     use crate::Pos;
     #[test]
     fn load_layout() {
