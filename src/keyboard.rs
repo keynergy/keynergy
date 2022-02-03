@@ -13,7 +13,7 @@ impl Finger {
     }
     /// Returns the direction between self and the argument f.
     /// ```rust
-    /// use keynergy::keyboard::{Finger, Hand, FingerKind, Direction};
+    /// use keynergy::{Finger, Hand, FingerKind, Direction};
     /// let ri = Finger::new(Hand::Right, FingerKind::Index);
     /// let rm = Finger::new(Hand::Right, FingerKind::Middle);
     /// assert_eq!(Direction::Outward, ri.dir_to(rm));
@@ -84,32 +84,29 @@ impl Keyboard {
 impl Direction {
     /// Returns the Direction from finger a to finger b.
     /// ```rust
-    /// use keynergy::keyboard::{Finger, Hand, FingerKind, Direction};
+    /// use keynergy::{Finger, Hand, FingerKind, Direction};
     /// let ri = Finger::new(Hand::Right, FingerKind::Index);
     /// let rm = Finger::new(Hand::Right, FingerKind::Middle);
     /// assert_eq!(Direction::Inward, Direction::from(rm, ri));
     /// assert_eq!(Direction::Outward, Direction::from(ri, rm));
     ///```
     pub fn from(a: Finger, b: Finger) -> Direction {
-	if a.hand != b.hand {
+        if a.hand != b.hand {
             Direction::None
-	} else {
+        } else {
             use std::cmp::Ordering::*;
             match a.kind.cmp(&b.kind) {
-		Less => Direction::Outward,
-		Equal => Direction::None,
-		Greater => Direction::Inward,
+                Less => Direction::Outward,
+                Equal => Direction::None,
+                Greater => Direction::Inward,
             }
-	}
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        keyboard::{Fingermap, Keyboard},
-        Pos,
-    };
+    use crate::{Fingermap, Keyboard, Pos};
     use std::collections::HashMap;
 
     #[test]
@@ -144,7 +141,7 @@ mod tests {
     }
     #[test]
     fn direction() {
-        use crate::keyboard::{Direction, Finger, FingerKind, Hand};
+        use crate::{Direction, Finger, FingerKind, Hand};
         let ri = Finger::new(Hand::Right, FingerKind::Index);
         let rm = Finger::new(Hand::Right, FingerKind::Middle);
         let li = Finger::new(Hand::Left, FingerKind::Index);
