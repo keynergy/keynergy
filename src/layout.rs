@@ -9,13 +9,13 @@ use std::io;
 use std::mem;
 use toml;
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct Formats {
     pub standard: Option<Keys>,
     pub angle: Option<Keys>,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 /// Wraps key data with the layout's metadata.
 pub struct Layout {
     pub name: String,
@@ -28,7 +28,7 @@ pub struct Layout {
     pub formats: Formats,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct Keys {
     pub matrix: Vec<Vec<char>>,
     pub map: HashMap<char, Pos>,
