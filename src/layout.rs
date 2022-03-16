@@ -72,8 +72,8 @@ impl Keys {
                 self.map.insert(
                     *key,
                     Pos {
-                        col: x as u8,
-                        row: y as u8,
+                        col: x,
+                        row: y,
                     },
                 );
             }

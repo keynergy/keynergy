@@ -1,57 +1,5 @@
-use crate::Pos;
+use crate::{Finger, Pos};
 use std::collections::HashMap;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Finger {
-    pub hand: Hand,
-    pub kind: FingerKind,
-}
-
-impl Finger {
-    pub fn new(hand: Hand, kind: FingerKind) -> Finger {
-        Finger { hand, kind }
-    }
-    /// Returns the direction between self and the argument f.
-    /// ```rust
-    /// use keynergy::{Finger, Hand, FingerKind, Direction};
-    /// let ri = Finger::new(Hand::Right, FingerKind::Index);
-    /// let rm = Finger::new(Hand::Right, FingerKind::Middle);
-    /// assert_eq!(Direction::Outward, ri.dir_to(rm));
-    /// assert_eq!(Direction::Inward, rm.dir_to(ri));
-    /// assert_eq!(Direction::None, ri.dir_to(ri));
-    /// ```
-    pub fn dir_to(self, f: Finger) -> Direction {
-        Direction::from(self, f)
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Hand {
-    Left,
-    Right,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub enum FingerKind {
-    Thumb,
-    Index,
-    Middle,
-    Ring,
-    Pinky,
-}
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum Direction {
-    Inward,
-    Outward,
-    None,
-}
-
-#[derive(Clone)]
-pub struct Fingermap {
-    pub matrix: Vec<Vec<Finger>>,
-    pub map: HashMap<Finger, Pos>,
-}
 
 /// Describes a physical keyboard and its properties.
 #[derive(Clone)]
@@ -62,18 +10,20 @@ pub struct Keyboard {
     /// how staggered each column is, in units
     pub colstagger: Vec<f64>,
     /// number of (cols, rows)
-    pub dimensions: [u8; 2],
+    pub dimensions: [usize; 2],
     /// how tall each key is, in units
     pub keyheight: f64,
     pub fingers: Fingermap,
 }
 
 impl Keyboard {
+    /// Returns the horizontal distance between two keys
     pub fn xdist(&self, a: &Pos, b: &Pos) -> f64 {
         ((self.rowstagger[a.row as usize] + a.col as f64)
             - (self.rowstagger[b.row as usize] + b.col as f64))
             .abs()
     }
+    /// Returns the vertical distance between two keys
     pub fn ydist(&self, a: &Pos, b: &Pos) -> f64 {
         ((self.colstagger[a.col as usize] + a.row as f64)
             - (self.colstagger[b.col as usize] + b.row as f64))
@@ -81,32 +31,15 @@ impl Keyboard {
     }
 }
 
-impl Direction {
-    /// Returns the Direction from finger a to finger b.
-    /// ```rust
-    /// use keynergy::{Finger, Hand, FingerKind, Direction};
-    /// let ri = Finger::new(Hand::Right, FingerKind::Index);
-    /// let rm = Finger::new(Hand::Right, FingerKind::Middle);
-    /// assert_eq!(Direction::Inward, Direction::from(rm, ri));
-    /// assert_eq!(Direction::Outward, Direction::from(ri, rm));
-    ///```
-    pub fn from(a: Finger, b: Finger) -> Direction {
-        if a.hand != b.hand {
-            Direction::None
-        } else {
-            use std::cmp::Ordering::*;
-            match a.kind.cmp(&b.kind) {
-                Less => Direction::Outward,
-                Equal => Direction::None,
-                Greater => Direction::Inward,
-            }
-        }
-    }
+#[derive(Clone)]
+pub struct Fingermap {
+    pub matrix: Vec<Vec<Finger>>,
+    pub map: HashMap<Finger, Pos>,
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{Fingermap, Keyboard, Pos};
+    use super::{Fingermap, Keyboard, Pos};
     use std::collections::HashMap;
 
     #[test]
