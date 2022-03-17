@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::Pos;
+use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum MetricAmount {
@@ -30,25 +30,25 @@ pub struct Metric {
 
 impl MetricList {
     pub fn new() -> Self {
-	Self {
-	    bigrams: HashMap::new(),
-	    trigrams: HashMap::new(),
-	    skipgrams: HashMap::new(),
-	}
+        Self {
+            bigrams: HashMap::new(),
+            trigrams: HashMap::new(),
+            skipgrams: HashMap::new(),
+        }
     }
 }
 
 impl MetricTotal {
     pub fn add(self, amount: MetricAmount, scale: u64) -> Self {
-	match self {
-	    Self::Count(c) => match amount {
-		MetricAmount::Boolean(a) => Self::Count(c + if a { scale } else { 0 }),
-		_ => self,
-	    },
-	    Self::Scalar(s) => match amount {
-		MetricAmount::Scalar(a) => Self::Scalar(s + (a * scale as f64)),
-		_ => self,
-	    },
-	}
+        match self {
+            Self::Count(c) => match amount {
+                MetricAmount::Boolean(a) => Self::Count(c + if a { scale } else { 0 }),
+                _ => self,
+            },
+            Self::Scalar(s) => match amount {
+                MetricAmount::Scalar(a) => Self::Scalar(s + (a * scale as f64)),
+                _ => self,
+            },
+        }
     }
 }

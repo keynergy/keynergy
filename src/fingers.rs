@@ -1,4 +1,4 @@
-use crate::{Finger, Hand, FingerKind};
+use crate::{Finger, FingerKind, Hand};
 
 pub const LT: Finger = Finger {
     hand: Hand::Left,

@@ -1,5 +1,5 @@
-use crate::{Pos, Keyboard, fingers::*};
-use ketos_derive::{IntoValue, FromValueClone, ForeignValue, StructValue};
+use crate::{fingers::*, Keyboard, Pos};
+use ketos_derive::{ForeignValue, FromValueClone, IntoValue, StructValue};
 #[derive(Clone, Debug, IntoValue, FromValueClone, ForeignValue, StructValue)]
 /// A structure that combines the finger that is used and the actual
 /// position data, used for Ketos metric functions

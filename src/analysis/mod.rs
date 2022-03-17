@@ -56,11 +56,8 @@ mod tests {
 
         let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
         analyzer.calculate_metrics(&matrix);
-	println!("{:?}", analyzer.keyboard_stats);
-        let result = analyzer.analyze_keys(
-            matrix,
-            semimak.formats.standard.unwrap(),
-        );
+        println!("{:?}", analyzer.keyboard_stats);
+        let result = analyzer.analyze_keys(matrix, semimak.formats.standard.unwrap());
         assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(1));
     }
 }

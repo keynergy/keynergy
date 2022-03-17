@@ -69,13 +69,7 @@ impl Keys {
     pub fn fill_map(&mut self) {
         for (y, row) in self.matrix.iter().enumerate() {
             for (x, key) in row.iter().enumerate() {
-                self.map.insert(
-                    *key,
-                    Pos {
-                        col: x,
-                        row: y,
-                    },
-                );
+                self.map.insert(*key, Pos { col: x, row: y });
             }
         }
     }

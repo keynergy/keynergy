@@ -64,15 +64,15 @@ impl Analyzer {
             .keyboard_stats
             .entry(kb.name.clone())
             .or_insert(HashMap::new());
-	let mut positions: Vec<Pos> = Vec::with_capacity(kb.dimensions[0] * kb.dimensions[1]);
-	let mut cpositions: HashMap<Pos, CombinedPos> = HashMap::new();
-	for x in 0..kb.dimensions[0] {
+        let mut positions: Vec<Pos> = Vec::with_capacity(kb.dimensions[0] * kb.dimensions[1]);
+        let mut cpositions: HashMap<Pos, CombinedPos> = HashMap::new();
+        for x in 0..kb.dimensions[0] {
             for y in 0..kb.dimensions[1] {
-		let p = Pos::new(x, y);
-		positions.push(p.clone());
-		cpositions.insert(p, CombinedPos::from(kb, p));
+                let p = Pos::new(x, y);
+                positions.push(p.clone());
+                cpositions.insert(p, CombinedPos::from(kb, p));
             }
-	}
+        }
         for p in positions.iter().combinations(2) {
             let mut amounts: Vec<(String, MetricAmount)> =
                 Vec::with_capacity(self.metrics.bigrams.len());
@@ -103,15 +103,15 @@ impl Analyzer {
             let pg: Vec<char> = k.iter().map(|p| *keys.pos_key(*p)).collect();
             if let Some(freq) = self.data.bigrams.get(&pg[..]) {
                 for (name, amount) in metrics {
-		    let mut total = totals.entry(name.clone()).or_insert(match amount {
+                    let mut total = totals.entry(name.clone()).or_insert(match amount {
                         MetricAmount::Boolean(_) => MetricTotal::Count(0),
                         MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
-		    });
-		    println!("{:?} {:?} {:?}", pg, total, freq);
+                    });
+                    println!("{:?} {:?} {:?}", pg, total, freq);
 
-		    println!("amount: {:?}", amount);
-		    *total = total.clone().add(amount.clone(), *freq);
-		    println!("{:?}", total);
+                    println!("amount: {:?}", amount);
+                    *total = total.clone().add(amount.clone(), *freq);
+                    println!("{:?}", total);
                 }
             }
         }
