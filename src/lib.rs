@@ -1,12 +1,17 @@
+#[cfg(feature = "analysis")]
 pub mod analysis;
-pub mod keyboard;
-pub mod layout;
+pub mod direction;
 pub mod finger;
 pub mod fingers;
-pub mod direction;
+pub mod keyboard;
+pub mod layout;
 pub mod pos;
-pub use keyboard::{Keyboard, Fingermap};
-pub use layout::{Formats, Keys, Layout};
-pub use finger::{Finger, FingerKind, Hand};
+pub mod textdata;
 pub use direction::Direction;
+pub use finger::{Finger, FingerKind, Hand};
+pub use keyboard::{Fingermap, Keyboard};
+pub use layout::{Formats, Keys, Layout};
 pub use pos::{Pos, PosPair};
+pub use textdata::TextData;
+#[cfg(feature = "analysis")]
+pub use analysis::{analyzer::Analyzer};
