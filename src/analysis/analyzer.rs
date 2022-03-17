@@ -107,11 +107,7 @@ impl Analyzer {
                         MetricAmount::Boolean(_) => MetricTotal::Count(0),
                         MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
                     });
-                    println!("{:?} {:?} {:?}", pg, total, freq);
-
-                    println!("amount: {:?}", amount);
                     *total = total.clone().add(amount.clone(), *freq);
-                    println!("{:?}", total);
                 }
             }
         }
