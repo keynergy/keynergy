@@ -1,6 +1,12 @@
 use crate::Pos;
 use std::collections::HashMap;
 
+pub enum InputType {
+    Bigram,
+    Trigram,
+    Skipgram,
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum MetricAmount {
     Boolean(bool),
@@ -14,9 +20,10 @@ pub enum MetricTotal {
 }
 
 pub struct MetricList {
+    /// bigrams contain both bigram and skipgram stats because it
+    /// refer to the number of positions
     pub bigrams: HashMap<String, Metric>,
     pub trigrams: HashMap<String, Metric>,
-    pub skipgrams: HashMap<String, Metric>,
 }
 
 pub type MetricMap = HashMap<Vec<Pos>, Vec<(String, MetricAmount)>>;
@@ -24,8 +31,17 @@ pub type MetricMap = HashMap<Vec<Pos>, Vec<(String, MetricAmount)>>;
 pub struct Metric {
     /// the name of the Ketos function that is called
     pub function: String,
-    /// number of inputs - 2 for bigram, 3 for trigram
-    pub input: usize,
+    /// type of input
+    pub input: InputType,
+}
+
+impl InputType {
+    pub fn length(&self) -> usize {
+	match self {
+	    InputType::Bigram | InputType::Skipgram => 2,
+	    InputType::Trigram => 3
+	}
+    }
 }
 
 impl MetricList {
@@ -33,7 +49,6 @@ impl MetricList {
         Self {
             bigrams: HashMap::new(),
             trigrams: HashMap::new(),
-            skipgrams: HashMap::new(),
         }
     }
 }
@@ -52,3 +67,12 @@ impl MetricTotal {
         }
     }
 }
+impl MetricAmount {
+    pub fn some(&self) -> bool {
+	match self {
+	    MetricAmount::Boolean(b) => *b,
+	    MetricAmount::Scalar(s) => *s != 0.0
+	}
+    }
+}
+

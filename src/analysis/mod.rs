@@ -2,15 +2,15 @@ pub mod analyzer;
 pub mod combinedpos;
 pub mod error;
 pub mod metrics;
-pub use analyzer::{classify_ngram, Analyzer};
+pub use analyzer::Analyzer;
 pub use combinedpos::{CombinedPos, CombinedPosGroup};
 pub use error::{AnalysisError, ErrorType};
-pub use metrics::{Metric, MetricAmount, MetricList, MetricMap, MetricTotal};
+pub use metrics::{InputType, Metric, MetricAmount, MetricList, MetricMap, MetricTotal};
 
 #[cfg(test)]
 mod tests {
     use crate::{
-        analysis::{classify_ngram, Analyzer, Metric, MetricList, MetricTotal},
+        analysis::{Analyzer, InputType, Metric, MetricList, MetricTotal},
         fingers::*,
         Fingermap, Keyboard, Layout, TextData,
     };
@@ -23,7 +23,7 @@ mod tests {
             "SFB".to_string(),
             Metric {
                 function: "sfb?".to_string(),
-                input: 2,
+                input: InputType::Bigram,
             },
         );
         let mut analyzer = Analyzer::with(metrics, TextData::from("question".to_string()));

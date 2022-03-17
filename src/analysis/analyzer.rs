@@ -19,13 +19,13 @@ pub struct Analyzer {
 
 pub fn classify_ngram(
     interpreter: &Interpreter,
-    pg: CombinedPosGroup,
+    pg: &CombinedPosGroup,
     metric: &Metric,
 ) -> Result<MetricAmount, AnalysisError> {
-    if metric.input != pg.len() {
+    if metric.input.length() != pg.len() {
         return Err(AnalysisError {
             metric: metric.function.clone(),
-            error: ErrorType::ArgumentError(metric.input),
+            error: ErrorType::ArgumentError(metric.input.length()),
         });
     }
     let result = interpreter.call(
@@ -73,21 +73,29 @@ impl Analyzer {
                 cpositions.insert(p, CombinedPos::from(kb, p));
             }
         }
-        for p in positions.iter().combinations(2) {
-            let mut amounts: Vec<(String, MetricAmount)> =
-                Vec::with_capacity(self.metrics.bigrams.len());
-            for m in &self.metrics.bigrams {
+	
+        for number in 2..3 {
+            for p in positions.iter().combinations(number) {
+                let mut amounts: Vec<(String, MetricAmount)> =
+                    Vec::with_capacity(self.metrics.bigrams.len());
                 let cpg: CombinedPosGroup = p
                     .iter()
                     .map(|x| cpositions.get(x).unwrap().clone())
                     .collect();
-                let amount = classify_ngram(&self.interpreter, cpg, &m.1).unwrap();
-                amounts.push((m.0.clone(), amount));
+                for m in &self.metrics.bigrams {
+                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1).unwrap();
+                    if amount.some() {
+                        amounts.push((m.0.clone(), amount));
+                    }
+                }
+                let positions_vec: Vec<Pos> = p.iter().map(|x| **x).collect();
+		if amounts.len() > 0 {
+                    map.insert(positions_vec, amounts);		    
+		}
             }
-            let positions_vec: Vec<Pos> = p.iter().map(|x| **x).collect();
-            map.insert(positions_vec, amounts);
         }
     }
+
     /// Analyzes the keys as they would be mapped onto the given
     /// keyboard and returns the metric totals. Returns None if the
     /// keyboard metrics for the given keyboard have not been
@@ -103,7 +111,7 @@ impl Analyzer {
             let pg: Vec<char> = k.iter().map(|p| *keys.pos_key(*p)).collect();
             if let Some(freq) = self.data.bigrams.get(&pg[..]) {
                 for (name, amount) in metrics {
-                    let mut total = totals.entry(name.clone()).or_insert(match amount {
+                    let total = totals.entry(name.clone()).or_insert(match amount {
                         MetricAmount::Boolean(_) => MetricTotal::Count(0),
                         MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
                     });
