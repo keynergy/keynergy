@@ -13,4 +13,4 @@ ketos_derive = {version="0.12", optional = true}
 itertools = {version = "0.7", optional = true}
 
 [features]
-analysis = []
+analysis = ["itertools", "ketos", "ketos_derive"]
