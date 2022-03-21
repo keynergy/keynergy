@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Fingermap",""],["Keyboard","Describes a physical keyboard and its properties."]]});

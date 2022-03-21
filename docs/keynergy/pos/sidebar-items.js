@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Pos","A position on a keyboard or layout (col, row)"]],"type":[["PosPair",""]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["LayoutError",""]],"struct":[["Formats",""],["Keys",""],["Layout","Wraps key data with the layout’s metadata."]]});
