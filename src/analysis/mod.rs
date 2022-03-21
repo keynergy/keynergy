@@ -14,7 +14,6 @@ mod tests {
         fingers::*,
         Fingermap, Keyboard, Layout, TextData,
     };
-    use ketos::FromValueRef;
     use std::collections::HashMap;
     #[test]
     fn classify() {

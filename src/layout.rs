@@ -87,9 +87,11 @@ impl Layout {
         let result = toml::from_str(&file);
         let mut layout: Layout = result?;
         // fills the maps for each format if they exist
-        // TODO make this less redundant
-        layout.formats.standard.as_mut().map(|l| l.fill_map());
-        layout.formats.angle.as_mut().map(|l| l.fill_map());
+        [&mut layout.formats.standard, &mut layout.formats.angle].map(|l| {
+            if let Some(l) = l.as_mut() {
+                l.fill_map()
+            }
+        });
         if layout.link == Some("".to_string()) {
             layout.link = None;
         }

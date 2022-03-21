@@ -24,7 +24,7 @@
       'none
     (let ((comparator
 	   (if (= (hand a) 'left)
-	       '> '<)))
+	       > <)))
       (if (comparator (hand a) (hand b))
 	  'outward
 	'inward))))
