@@ -1,3 +1,0 @@
-(function() {var implementors = {};
-implementors["keynergy"] = [{"text":"impl Freeze for <a class=\"struct\" href=\"keynergy/layout/struct.Layout.html\" title=\"struct keynergy::layout::Layout\">Layout</a>","synthetic":true,"types":["keynergy::layout::Layout"]},{"text":"impl Freeze for <a class=\"enum\" href=\"keynergy/layout/enum.LayoutError.html\" title=\"enum keynergy::layout::LayoutError\">LayoutError</a>","synthetic":true,"types":["keynergy::layout::LayoutError"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
