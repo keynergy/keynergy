@@ -1,0 +1,31 @@
+(define LP 0)
+(define LR 1)
+(define LM 2)
+(define LI 3)
+(define LT 4)
+(define RP 9)
+(define RR 8)
+(define RM 7)
+(define RI 6)
+(define RT 5)
+
+(define (finger p)
+  (. p :finger))
+
+(define (hand p)
+  (if (<= (finger p) 4)
+      'left 'right))
+
+(define (dir a b)
+  (if (or (!= (hand a)
+	      (hand b))
+	  (= (finger a)
+	     (finger b)))
+      'none
+    (let ((comparator
+	   (if (= (hand a) 'left)
+	       '> '<)))
+      (if (comparator (hand a) (hand b))
+	  'outward
+	'inward))))
+

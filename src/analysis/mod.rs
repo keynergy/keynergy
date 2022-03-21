@@ -26,7 +26,7 @@ mod tests {
                 input: InputType::Bigram,
             },
         );
-        let mut analyzer = Analyzer::with(metrics, TextData::from("question".to_string()));
+        let mut analyzer = Analyzer::with(metrics, TextData::from("queuestion".to_string()));
         analyzer
             .interpreter
             .run_code(
@@ -58,6 +58,6 @@ mod tests {
         analyzer.calculate_metrics(&matrix);
         println!("{:?}", analyzer.keyboard_stats);
         let result = analyzer.analyze_keys(matrix, semimak.formats.standard.unwrap());
-        assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(1));
+        assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(2));
     }
 }

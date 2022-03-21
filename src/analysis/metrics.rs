@@ -21,7 +21,7 @@ pub enum MetricTotal {
 
 pub struct MetricList {
     /// bigrams contain both bigram and skipgram stats because it
-    /// refer to the number of positions
+    /// refers to the number of positions
     pub bigrams: HashMap<String, Metric>,
     pub trigrams: HashMap<String, Metric>,
 }
@@ -37,10 +37,10 @@ pub struct Metric {
 
 impl InputType {
     pub fn length(&self) -> usize {
-	match self {
-	    InputType::Bigram | InputType::Skipgram => 2,
-	    InputType::Trigram => 3
-	}
+        match self {
+            InputType::Bigram | InputType::Skipgram => 2,
+            InputType::Trigram => 3,
+        }
     }
 }
 
@@ -69,10 +69,9 @@ impl MetricTotal {
 }
 impl MetricAmount {
     pub fn some(&self) -> bool {
-	match self {
-	    MetricAmount::Boolean(b) => *b,
-	    MetricAmount::Scalar(s) => *s != 0.0
-	}
+        match self {
+            MetricAmount::Boolean(b) => *b,
+            MetricAmount::Scalar(s) => *s != 0.0,
+        }
     }
 }
-

@@ -1,6 +1,6 @@
 use crate::analysis::{
-    AnalysisError, CombinedPos, CombinedPosGroup, ErrorType, Metric, MetricAmount, MetricList,
-    MetricMap, MetricTotal,
+    AnalysisError, CombinedPos, CombinedPosGroup, ErrorType, InputType, Metric, MetricAmount,
+    MetricList, MetricMap, MetricTotal,
 };
 use crate::{Keyboard, Keys, Pos, TextData};
 use itertools::Itertools;
@@ -73,7 +73,7 @@ impl Analyzer {
                 cpositions.insert(p, CombinedPos::from(kb, p));
             }
         }
-	
+
         for number in 2..3 {
             for p in positions.iter().combinations(number) {
                 let mut amounts: Vec<(String, MetricAmount)> =
@@ -89,9 +89,9 @@ impl Analyzer {
                     }
                 }
                 let positions_vec: Vec<Pos> = p.iter().map(|x| **x).collect();
-		if amounts.len() > 0 {
-                    map.insert(positions_vec, amounts);		    
-		}
+                if amounts.len() > 0 {
+                    map.insert(positions_vec, amounts);
+                }
             }
         }
     }
@@ -109,14 +109,25 @@ impl Analyzer {
         let mut totals: HashMap<String, MetricTotal> = HashMap::new();
         for (k, metrics) in map {
             let pg: Vec<char> = k.iter().map(|p| *keys.pos_key(*p)).collect();
-            if let Some(freq) = self.data.bigrams.get(&pg[..]) {
-                for (name, amount) in metrics {
-                    let total = totals.entry(name.clone()).or_insert(match amount {
-                        MetricAmount::Boolean(_) => MetricTotal::Count(0),
-                        MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
-                    });
-                    *total = total.clone().add(amount.clone(), *freq);
-                }
+            for (name, amount) in metrics {
+                let freq = match pg.len() {
+                    2 => match self.metrics.bigrams[name].input {
+                        InputType::Bigram => self.data.bigrams.get(&pg[..]),
+                        InputType::Skipgram => self.data.skip_1_grams.get(&pg[..]),
+                        _ => Some(&0),
+                    },
+                    3 => self.data.trigrams.get(&pg[..]),
+                    _ => Some(&0),
+                };
+                let freq = match freq {
+                    Some(f) => f,
+                    None => continue,
+                };
+                let total = totals.entry(name.clone()).or_insert(match amount {
+                    MetricAmount::Boolean(_) => MetricTotal::Count(0),
+                    MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
+                });
+                *total = total.clone().add(amount.clone(), *freq);
             }
         }
         Some(totals)
@@ -126,23 +137,14 @@ impl Analyzer {
 /// Creates the default Ketos interpreter for metric extension
 pub fn interpreter() -> Interpreter {
     let interp = Interpreter::new();
-    interp
-        .run_code(
-            r#"
-(define LP 0)
-(define LR 1)
-(define LM 2)
-(define LI 3)
-(define LT 4)
-(define RP 9)
-(define RR 8)
-(define RM 7)
-(define RI 6)
-(define RT 5)
-"#,
-            None,
-        )
-        .unwrap();
+    let result = interp.run_code(include_str!("data.ket"), None);
+    match result {
+        Err(e) => {
+            interp.display_trace(&ketos::trace::take_traceback().unwrap());
+            interp.display_error(&e);
+        }
+        _ => (),
+    };
     interp.scope().register_struct_value::<CombinedPos>();
     interp
 }
