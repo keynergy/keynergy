@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct TextData {
     pub chars: HashMap<char, u64>,
     pub bigrams: HashMap<[char; 2], u64>,
