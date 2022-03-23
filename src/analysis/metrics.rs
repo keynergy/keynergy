@@ -9,13 +9,13 @@ pub enum InputType {
     Skipgram,
 }
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub enum MetricAmount {
     Boolean(bool),
     Scalar(f64),
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum MetricTotal {
     Count(u64),
     Scalar(f64),
