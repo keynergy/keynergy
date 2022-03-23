@@ -1,6 +1,6 @@
 use crate::Pos;
 use crate::PosPair;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::error;
 use std::fmt;
@@ -9,13 +9,13 @@ use std::io;
 use std::mem;
 use toml;
 
-#[derive(Clone, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Formats {
     pub standard: Option<Keys>,
     pub angle: Option<Keys>,
 }
 
-#[derive(Clone, Deserialize, Debug)]
+#[derive(Clone, Deserialize, Serialize, Debug)]
 /// Wraps key data with the layout's metadata.
 pub struct Layout {
     pub name: String,
@@ -28,7 +28,7 @@ pub struct Layout {
     pub formats: Formats,
 }
 
-#[derive(Clone, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Keys {
     pub matrix: Vec<Vec<char>>,
     pub map: HashMap<char, Pos>,

@@ -1,5 +1,5 @@
-use serde::Deserialize;
-#[derive(Deserialize, Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
+use serde::{Deserialize, Serialize};
+#[derive(Serialize, Deserialize, Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
 /// A position on a keyboard or layout (col, row)
 pub struct Pos {
     pub col: usize,
