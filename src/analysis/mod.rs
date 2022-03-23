@@ -12,7 +12,7 @@ mod tests {
     use crate::{
         analysis::{Analyzer, InputType, Metric, MetricList, MetricTotal},
         fingers::*,
-        Fingermap, Keyboard, Layout, TextData,
+        Keyboard, Layout, TextData,
     };
     use std::collections::HashMap;
     #[test]
@@ -43,14 +43,11 @@ mod tests {
             colstagger: vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             dimensions: [10, 3],
             keyheight: 0.5,
-            fingers: Fingermap {
-                matrix: vec![
-                    vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                    vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                    vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                ],
-                map: HashMap::new(),
-            },
+            fingers: vec![
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+            ],
         };
 
         let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();

@@ -16,7 +16,7 @@ impl CombinedPos {
         Self {
             x: kb.rowstagger[p.row] + p.col as f64,
             y: kb.colstagger[p.col] + p.row as f64,
-            finger: match kb.fingers.matrix[p.row][p.col] {
+            finger: match kb.fingers[p.row][p.col] {
                 LP => 0,
                 LR => 1,
                 LM => 2,

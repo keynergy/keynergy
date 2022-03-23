@@ -1,7 +1,8 @@
 use crate::Pos;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+#[derive(Serialize, Deserialize)]
 pub enum InputType {
     Bigram,
     Trigram,
@@ -20,7 +21,7 @@ pub enum MetricTotal {
     Scalar(f64),
 }
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct MetricList {
     /// bigrams contain both bigram and skipgram stats because it
     /// refers to the number of positions
@@ -30,7 +31,7 @@ pub struct MetricList {
 
 pub type MetricMap = HashMap<Vec<Pos>, Vec<(String, MetricAmount)>>;
 
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Metric {
     /// the name of the Ketos function that is called
     pub function: String,
