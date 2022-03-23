@@ -11,7 +11,7 @@ pub mod textdata;
 pub use analysis::analyzer::Analyzer;
 pub use direction::Direction;
 pub use finger::{Finger, FingerKind, Hand};
-pub use keyboard::{Fingermap, Keyboard};
+pub use keyboard::Keyboard;
 pub use layout::{Formats, Keys, Layout};
 pub use pos::{Pos, PosPair};
 pub use textdata::TextData;

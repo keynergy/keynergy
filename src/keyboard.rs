@@ -13,7 +13,7 @@ pub struct Keyboard {
     pub dimensions: [usize; 2],
     /// how tall each key is, in units
     pub keyheight: f64,
-    pub fingers: Fingermap,
+    pub fingers: Vec<Vec<Finger>>,
 }
 
 impl Keyboard {
@@ -31,15 +31,9 @@ impl Keyboard {
     }
 }
 
-#[derive(Clone)]
-pub struct Fingermap {
-    pub matrix: Vec<Vec<Finger>>,
-    pub map: HashMap<Finger, Pos>,
-}
-
 #[cfg(test)]
 mod tests {
-    use super::{Fingermap, Keyboard, Pos};
+    use super::{Keyboard, Pos};
     use std::collections::HashMap;
 
     #[test]
@@ -50,10 +44,7 @@ mod tests {
             colstagger: vec![0.0, 0.0, 0.0],
             dimensions: [10, 3],
             keyheight: 1.0,
-            fingers: Fingermap {
-                matrix: vec![vec![]],
-                map: HashMap::new(),
-            },
+            fingers: vec![vec![]],
         };
         assert_eq!(matrix.xdist(&Pos::new(0, 0), &Pos::new(1, 0)), 1.0);
         // shouldn't have any horizontal distance
