@@ -1,6 +1,9 @@
 use crate::{fingers::*, Keyboard, Pos};
 use ketos_derive::{ForeignValue, FromValueClone, IntoValue, StructValue};
-#[derive(Clone, Debug, IntoValue, FromValueClone, ForeignValue, StructValue)]
+use serde::{Deserialize, Serialize};
+#[derive(
+    Clone, Debug, IntoValue, FromValueClone, ForeignValue, StructValue, Serialize, Deserialize,
+)]
 /// A structure that combines the finger that is used and the actual
 /// position data, used for Ketos metric functions
 pub struct CombinedPos {
