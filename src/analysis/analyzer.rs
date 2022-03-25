@@ -59,7 +59,7 @@ impl<'a> Analyzer<'a> {
     }
     /// Calculates the metrics of the given keyboard. This is needed
     /// for the analyze_keys function.
-    pub fn calculate_metrics(&mut self, kb: &Keyboard) {
+    pub fn calculate_metrics(&mut self, kb: &Keyboard) -> Result<(), AnalysisError> {
         let map = self
             .keyboard_stats
             .entry(kb.name.clone())
@@ -83,7 +83,7 @@ impl<'a> Analyzer<'a> {
                     .map(|x| cpositions.get(x).unwrap().clone())
                     .collect();
                 for m in &self.metrics.bigrams {
-                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1).unwrap();
+                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1)?;
                     if amount.some() {
                         amounts.push((m.0.clone(), amount));
                     }
@@ -94,6 +94,7 @@ impl<'a> Analyzer<'a> {
                 }
             }
         }
+        Ok(())
     }
 
     /// Analyzes the keys as they would be mapped onto the given
