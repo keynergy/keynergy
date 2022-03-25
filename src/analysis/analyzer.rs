@@ -133,11 +133,8 @@ impl<'a> Analyzer<'a> {
         }
         Some(totals)
     }
-    pub fn run_ket_code(&mut self, c: String) -> Result<(), ketos::Error> {
-	match self.interpreter.run_code(&c, None) {
-	    Ok(_) => Ok(()),
-	    Err(e) => Err(e)
-	}
+    pub fn run_ket_code(&mut self, c: String) -> Result<ketos::Value, ketos::Error> {
+	self.interpreter.run_code(&c, None)
     }
     pub fn trace(&self, r: Result<ketos::Value, ketos::Error>) -> Result<ketos::Value, ketos::Error> {
 	match r {
