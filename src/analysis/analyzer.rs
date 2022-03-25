@@ -139,6 +139,16 @@ impl<'a> Analyzer<'a> {
 	    Err(e) => Err(e)
 	}
     }
+    pub fn trace(&self, r: Result<ketos::Value, ketos::Error>) -> Result<ketos::Value, ketos::Error> {
+	match r {
+	    Err(ref e) => {
+		self.interpreter.display_trace(&ketos::trace::take_traceback().unwrap());
+		self.interpreter.display_error(e);
+	    }
+	    _ => (),
+	};
+	r
+    }
 }
 
 /// Creates the default Ketos interpreter for metric extension
@@ -146,12 +156,14 @@ pub fn interpreter() -> Interpreter {
     let interp = Interpreter::new();
     let result = interp.run_code(include_str!("data.ket"), None);
     match result {
-        Err(e) => {
-            interp.display_trace(&ketos::trace::take_traceback().unwrap());
-            interp.display_error(&e);
-        }
-        _ => (),
+	Err(e) => {
+	    interp.display_trace(&ketos::trace::take_traceback().unwrap());
+	    interp.display_error(&e);
+	}
+	_ => (),
     };
     interp.scope().register_struct_value::<CombinedPos>();
     interp
 }
+
+
