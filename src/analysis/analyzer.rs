@@ -133,6 +133,12 @@ impl<'a> Analyzer<'a> {
         }
         Some(totals)
     }
+    pub fn run_ket_code(&mut self, c: String) -> Result<(), ketos::Error> {
+	match self.interpreter.run_code(&c, None) {
+	    Ok(_) => Ok(()),
+	    Err(e) => Err(e)
+	}
+    }
 }
 
 /// Creates the default Ketos interpreter for metric extension
