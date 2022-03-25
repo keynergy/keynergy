@@ -25,7 +25,8 @@ mod tests {
                 input: InputType::Bigram,
             },
         );
-        let mut analyzer = Analyzer::with(metrics, TextData::from("queuestion".to_string()));
+        let td = TextData::from("queuestion".to_string());
+        let mut analyzer = Analyzer::with(metrics, &td);
         analyzer
             .interpreter
             .run_code(

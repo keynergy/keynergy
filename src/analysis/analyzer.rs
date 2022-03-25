@@ -8,10 +8,10 @@ use ketos::{Interpreter, Value};
 use std::collections::HashMap;
 
 /// An object that handles keyboard and layout analysis.
-pub struct Analyzer {
+pub struct Analyzer<'a> {
     pub interpreter: Interpreter,
     pub metrics: MetricList,
-    pub data: TextData,
+    pub data: &'a TextData,
     /// HashMap where the key is the name of a keyboard, and the value
     /// is its metric map.
     pub keyboard_stats: HashMap<String, MetricMap>,
@@ -47,9 +47,9 @@ pub fn classify_ngram(
     }
 }
 
-impl Analyzer {
+impl<'a> Analyzer<'a> {
     /// Constructs a new Analyzer with the given metrics and text data.
-    pub fn with(metrics: MetricList, data: TextData) -> Self {
+    pub fn with(metrics: MetricList, data: &'a TextData) -> Self {
         Self {
             interpreter: interpreter(),
             data,
