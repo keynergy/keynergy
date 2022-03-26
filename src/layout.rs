@@ -102,16 +102,26 @@ impl Layout {
 impl Keys {
     pub fn has_pos(&self, p: Pos) -> bool {
         #[allow(clippy::collapsible_if)]
-        if self.matrix.len() > p.row as usize {
-            if self.matrix[p.row as usize].len() > p.col as usize {
+        if self.matrix.len() > p.row {
+            if self.matrix[p.row].len() > p.col {
                 return true;
             }
         }
         false
     }
 
-    pub fn pos_key(&self, p: Pos) -> &char {
-        &self.matrix[p.row as usize][p.col as usize]
+    pub fn pos_key_unsafe(&self, p: Pos) -> &char {
+        &self.matrix[p.row][p.col]
+    }
+
+    pub fn pos_key(&self, p: Pos) -> Option<&char> {
+        if self.matrix.len() > p.row {
+            let row = &self.matrix[p.row];
+            if row.len() > p.col {
+                return Some(&row[p.col]);
+            }
+        }
+        None
     }
 
     pub fn swap(&mut self, p: &PosPair) {
@@ -134,8 +144,8 @@ impl Keys {
             )
         }
 
-        self.map.insert(*self.pos_key(p[0]), p[0]);
-        self.map.insert(*self.pos_key(p[1]), p[1]);
+        self.map.insert(*self.pos_key_unsafe(p[0]), p[0]);
+        self.map.insert(*self.pos_key_unsafe(p[1]), p[1]);
     }
 }
 

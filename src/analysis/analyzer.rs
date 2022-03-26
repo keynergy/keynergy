@@ -109,7 +109,11 @@ impl<'a> Analyzer<'a> {
 
         let mut totals: HashMap<String, MetricTotal> = HashMap::new();
         for (k, metrics) in map {
-            let pg: Vec<char> = k.iter().map(|p| *keys.pos_key(*p)).collect();
+            let pg: Vec<char> = k
+                .iter()
+                .filter_map(|p| keys.pos_key(*p))
+                .map(|p| *p)
+                .collect();
             for (name, amount) in metrics {
                 let freq = match pg.len() {
                     2 => match self.metrics.bigrams[name].input {
@@ -134,17 +138,21 @@ impl<'a> Analyzer<'a> {
         Some(totals)
     }
     pub fn run_ket_code(&mut self, c: String) -> Result<ketos::Value, ketos::Error> {
-	self.interpreter.run_code(&c, None)
+        self.interpreter.run_code(&c, None)
     }
-    pub fn trace(&self, r: Result<ketos::Value, ketos::Error>) -> Result<ketos::Value, ketos::Error> {
-	match r {
-	    Err(ref e) => {
-		self.interpreter.display_trace(&ketos::trace::take_traceback().unwrap());
-		self.interpreter.display_error(e);
-	    }
-	    _ => (),
-	};
-	r
+    pub fn trace(
+        &self,
+        r: Result<ketos::Value, ketos::Error>,
+    ) -> Result<ketos::Value, ketos::Error> {
+        match r {
+            Err(ref e) => {
+                self.interpreter
+                    .display_trace(&ketos::trace::take_traceback().unwrap());
+                self.interpreter.display_error(e);
+            }
+            _ => (),
+        };
+        r
     }
 }
 
@@ -153,14 +161,12 @@ pub fn interpreter() -> Interpreter {
     let interp = Interpreter::new();
     let result = interp.run_code(include_str!("data.ket"), None);
     match result {
-	Err(e) => {
-	    interp.display_trace(&ketos::trace::take_traceback().unwrap());
-	    interp.display_error(&e);
-	}
-	_ => (),
+        Err(e) => {
+            interp.display_trace(&ketos::trace::take_traceback().unwrap());
+            interp.display_error(&e);
+        }
+        _ => (),
     };
     interp.scope().register_struct_value::<CombinedPos>();
     interp
 }
-
-
