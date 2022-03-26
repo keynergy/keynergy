@@ -8,10 +8,10 @@ use ketos::{Interpreter, Value};
 use std::collections::HashMap;
 
 /// An object that handles keyboard and layout analysis.
-pub struct Analyzer {
+pub struct Analyzer<'a> {
     pub interpreter: Interpreter,
     pub metrics: MetricList,
-    pub data: TextData,
+    pub data: &'a TextData,
     /// HashMap where the key is the name of a keyboard, and the value
     /// is its metric map.
     pub keyboard_stats: HashMap<String, MetricMap>,
@@ -47,9 +47,9 @@ pub fn classify_ngram(
     }
 }
 
-impl Analyzer {
+impl<'a> Analyzer<'a> {
     /// Constructs a new Analyzer with the given metrics and text data.
-    pub fn with(metrics: MetricList, data: TextData) -> Self {
+    pub fn with(metrics: MetricList, data: &'a TextData) -> Self {
         Self {
             interpreter: interpreter(),
             data,
@@ -59,7 +59,7 @@ impl Analyzer {
     }
     /// Calculates the metrics of the given keyboard. This is needed
     /// for the analyze_keys function.
-    pub fn calculate_metrics(&mut self, kb: &Keyboard) {
+    pub fn calculate_metrics(&mut self, kb: &Keyboard) -> Result<(), AnalysisError> {
         let map = self
             .keyboard_stats
             .entry(kb.name.clone())
@@ -83,7 +83,7 @@ impl Analyzer {
                     .map(|x| cpositions.get(x).unwrap().clone())
                     .collect();
                 for m in &self.metrics.bigrams {
-                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1).unwrap();
+                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1)?;
                     if amount.some() {
                         amounts.push((m.0.clone(), amount));
                     }
@@ -94,6 +94,7 @@ impl Analyzer {
                 }
             }
         }
+        Ok(())
     }
 
     /// Analyzes the keys as they would be mapped onto the given
@@ -132,6 +133,19 @@ impl Analyzer {
         }
         Some(totals)
     }
+    pub fn run_ket_code(&mut self, c: String) -> Result<ketos::Value, ketos::Error> {
+	self.interpreter.run_code(&c, None)
+    }
+    pub fn trace(&self, r: Result<ketos::Value, ketos::Error>) -> Result<ketos::Value, ketos::Error> {
+	match r {
+	    Err(ref e) => {
+		self.interpreter.display_trace(&ketos::trace::take_traceback().unwrap());
+		self.interpreter.display_error(e);
+	    }
+	    _ => (),
+	};
+	r
+    }
 }
 
 /// Creates the default Ketos interpreter for metric extension
@@ -139,12 +153,14 @@ pub fn interpreter() -> Interpreter {
     let interp = Interpreter::new();
     let result = interp.run_code(include_str!("data.ket"), None);
     match result {
-        Err(e) => {
-            interp.display_trace(&ketos::trace::take_traceback().unwrap());
-            interp.display_error(&e);
-        }
-        _ => (),
+	Err(e) => {
+	    interp.display_trace(&ketos::trace::take_traceback().unwrap());
+	    interp.display_error(&e);
+	}
+	_ => (),
     };
     interp.scope().register_struct_value::<CombinedPos>();
     interp
 }
+
+
