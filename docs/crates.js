@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["keynergy"];
+window.ALL_CRATES = ["keynergy","proc_macro2","quote","serde","serde_derive","syn","toml","unicode_xid"];

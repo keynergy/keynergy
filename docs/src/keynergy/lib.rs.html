@@ -17,7 +17,89 @@
 <span id="15">15</span>
 <span id="16">16</span>
 <span id="17">17</span>
-</pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;analysis&quot;</span>)]</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+</pre><pre class="rust"><code><span class="doccomment">//! # Keynergy</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Keynergy is a powerful, efficient, and extensible library for</span>
+<span class="doccomment">//! keyboard layout analysis.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Features</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Keynergy allows you to:</span>
+<span class="doccomment">//! - serialize and deserialize layouts, keyboards, metrics, text</span>
+<span class="doccomment">//! data, and more using [Serde](https://docs.rs/serde)</span>
+<span class="doccomment">//! - get the frequencies of characters, bigrams, trigrams, and skipgrams in a text</span>
+<span class="doccomment">//! - declaratively write custom metrics using</span>
+<span class="doccomment">//! [Ketos](https://docs.rs/ketos)</span>
+<span class="doccomment">//! - prebake almost all analysis data before the layout is even known, making Keynergy</span>
+<span class="doccomment">//! extremely efficient</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Example</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! use keynergy::{Keyboard, Layout, Keys, Direction, Pos};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let mut qwerty = Keys::qwerty();</span>
+<span class="doccomment">//! assert_eq!(qwerty.pos_key(Pos::new(0, 0)), Some(&amp;&#39;q&#39;));</span>
+<span class="doccomment">//! assert_eq!(qwerty.pos_key(Pos::new(0, 1)), Some(&amp;&#39;a&#39;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Easily swap keys.</span>
+<span class="doccomment">//! qwerty.swap(Pos::new(0,0), Pos::new(0, 1));</span>
+<span class="doccomment">//! assert_eq!(qwerty.pos_key(Pos::new(0,0)), Some(&amp;&#39;a&#39;));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Provides constants for our 10 human fingers.</span>
+<span class="doccomment">//! use keynergy::fingers::*;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Get the direction between two fingers.</span>
+<span class="doccomment">//! assert_eq!(Direction::from(LI, LM), Direction::Outward);</span>
+<span class="doccomment">//! assert_eq!(Direction::from(LM, LI), Direction::Inward);</span>
+<span class="doccomment">//! assert_eq!(Direction::from(LI, LI), Direction::None);</span>
+<span class="doccomment">//! assert_eq!(Direction::from(LI, RM), Direction::None);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Can also be written this way.</span>
+<span class="doccomment">//! assert_eq!(LI.dir_to(LM), Direction::Outward);</span>
+<span class="doccomment">//! ```</span>
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;analysis&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">analysis</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">direction</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">finger</span>;
@@ -30,7 +112,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">analysis::analyzer::Analyzer</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">direction::Direction</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">finger</span>::{<span class="ident">Finger</span>, <span class="ident">FingerKind</span>, <span class="ident">Hand</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">keyboard</span>::{<span class="ident">Fingermap</span>, <span class="ident">Keyboard</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">keyboard::Keyboard</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">layout</span>::{<span class="ident">Formats</span>, <span class="ident">Keys</span>, <span class="ident">Layout</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pos</span>::{<span class="ident">Pos</span>, <span class="ident">PosPair</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">textdata::TextData</span>;

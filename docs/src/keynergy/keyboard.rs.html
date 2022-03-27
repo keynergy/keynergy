@@ -77,15 +77,6 @@
 <span id="75">75</span>
 <span id="76">76</span>
 <span id="77">77</span>
-<span id="78">78</span>
-<span id="79">79</span>
-<span id="80">80</span>
-<span id="81">81</span>
-<span id="82">82</span>
-<span id="83">83</span>
-<span id="84">84</span>
-<span id="85">85</span>
-<span id="86">86</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Finger</span>, <span class="ident">Pos</span>};
 <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
@@ -101,7 +92,7 @@
     <span class="kw">pub</span> <span class="ident">dimensions</span>: [<span class="ident">usize</span>; <span class="number">2</span>],
     <span class="doccomment">/// how tall each key is, in units</span>
     <span class="kw">pub</span> <span class="ident">keyheight</span>: <span class="ident">f64</span>,
-    <span class="kw">pub</span> <span class="ident">fingers</span>: <span class="ident">Fingermap</span>,
+    <span class="kw">pub</span> <span class="ident">fingers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Finger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Keyboard</span> {
@@ -119,15 +110,9 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Fingermap</span> {
-    <span class="kw">pub</span> <span class="ident">matrix</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Finger</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Finger</span>, <span class="ident">Pos</span><span class="op">&gt;</span>,
-}
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Fingermap</span>, <span class="ident">Keyboard</span>, <span class="ident">Pos</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Keyboard</span>, <span class="ident">Pos</span>};
     <span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -138,10 +123,7 @@
             <span class="ident">colstagger</span>: <span class="macro">vec!</span>[<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>],
             <span class="ident">dimensions</span>: [<span class="number">10</span>, <span class="number">3</span>],
             <span class="ident">keyheight</span>: <span class="number">1.0</span>,
-            <span class="ident">fingers</span>: <span class="ident">Fingermap</span> {
-                <span class="ident">matrix</span>: <span class="macro">vec!</span>[<span class="macro">vec!</span>[]],
-                <span class="ident">map</span>: <span class="ident">HashMap::new</span>(),
-            },
+            <span class="ident">fingers</span>: <span class="macro">vec!</span>[<span class="macro">vec!</span>[]],
         };
         <span class="macro">assert_eq!</span>(<span class="ident">matrix</span>.<span class="ident">xdist</span>(<span class="kw-2">&amp;</span><span class="ident">Pos::new</span>(<span class="number">0</span>, <span class="number">0</span>), <span class="kw-2">&amp;</span><span class="ident">Pos::new</span>(<span class="number">1</span>, <span class="number">0</span>)), <span class="number">1.0</span>);
         <span class="comment">// shouldn&#39;t have any horizontal distance</span>

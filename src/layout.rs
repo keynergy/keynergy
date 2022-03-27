@@ -66,6 +66,16 @@ impl From<io::Error> for LayoutError {
 }
 
 impl Keys {
+    pub fn new(matrix: Vec<Vec<char>>, home_row: u8, thumb_row: Option<u8>) -> Self {
+        let mut k = Keys {
+            matrix,
+            map: HashMap::new(),
+            home_row,
+            thumb_row,
+        };
+        k.fill_map();
+        k
+    }
     pub fn fill_map(&mut self) {
         for (y, row) in self.matrix.iter().enumerate() {
             for (x, key) in row.iter().enumerate() {
@@ -100,6 +110,25 @@ impl Layout {
 }
 
 impl Keys {
+    pub fn qwerty() -> Self {
+        Keys::new(
+            vec![
+                vec!['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+                vec!['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';'],
+                vec!['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/'],
+            ],
+            1,
+            None,
+        )
+    }
+    /// Returns whether the keys contain a character or not.
+    /// # Example
+    /// ```rust
+    /// use keynergy::{Keys, Pos};
+    /// let qwerty = Keys::qwerty();
+    /// assert_eq!(qwerty.has_pos(Pos::new(0,0)), true);
+    /// assert_eq!(qwerty.has_pos(Pos::new(100,4)), false);
+    /// ```
     pub fn has_pos(&self, p: Pos) -> bool {
         #[allow(clippy::collapsible_if)]
         if self.matrix.len() > p.row {
@@ -110,6 +139,20 @@ impl Keys {
         false
     }
 
+    /// Returns the character at the given position without checking
+    /// if it's valid.
+    /// # Examples
+    /// ```rust
+    /// use keynergy::{Keys, Pos};
+    /// let qwerty = Keys::qwerty();
+    /// assert_eq!(qwerty.pos_key_unsafe(Pos::new(0,0)), &'q');
+    /// ```
+    /// This example panics
+    /// ```rust,should_panic
+    /// use keynergy::{Keys, Pos};
+    /// let qwerty = Keys::qwerty();
+    /// let c = qwerty.pos_key_unsafe(Pos::new(100, 0));
+    /// ```
     pub fn pos_key_unsafe(&self, p: Pos) -> &char {
         &self.matrix[p.row][p.col]
     }
@@ -124,18 +167,18 @@ impl Keys {
         None
     }
 
-    pub fn swap(&mut self, p: &PosPair) {
-        if p[0].row == p[1].row {
-            self.matrix[p[0].row as usize].swap(p[0].col as usize, p[1].col as usize)
+    pub fn swap(&mut self, a: Pos, b: Pos) {
+        if a.row == b.row {
+            self.matrix[a.row as usize].swap(a.col as usize, b.col as usize)
         } else {
             let gtr: &Pos;
             let lsr: &Pos;
-            if p[0].row > p[1].row {
-                gtr = &p[0];
-                lsr = &p[1];
+            if a.row > b.row {
+                gtr = &a;
+                lsr = &b;
             } else {
-                gtr = &p[1];
-                lsr = &p[0];
+                gtr = &b;
+                lsr = &a;
             }
             let (l, r) = self.matrix.split_at_mut(gtr.row as usize);
             mem::swap(
@@ -144,8 +187,8 @@ impl Keys {
             )
         }
 
-        self.map.insert(*self.pos_key_unsafe(p[0]), p[0]);
-        self.map.insert(*self.pos_key_unsafe(p[1]), p[1]);
+        self.map.insert(*self.pos_key_unsafe(a), a);
+        self.map.insert(*self.pos_key_unsafe(b), b);
     }
 }
 
@@ -181,13 +224,13 @@ mod tests {
     fn keys_swap() {
         let semimak_jq = Layout::load("testdata/semimak_jq.toml").unwrap();
         let mut keys = semimak_jq.formats.standard.unwrap();
-        keys.swap(&[Pos::new(0, 0), Pos::new(1, 0)]);
+        keys.swap(Pos::new(0, 0), Pos::new(1, 0));
         assert_eq!(keys.matrix[0][0], 'l');
         assert_eq!(keys.matrix[0][1], 'f');
         assert_eq!(keys.map[&'l'], Pos::new(0, 0));
         assert_eq!(keys.map[&'f'], Pos::new(1, 0));
 
-        keys.swap(&[Pos::new(3, 0), Pos::new(2, 1)]);
+        keys.swap(Pos::new(3, 0), Pos::new(2, 1));
         assert_eq!(keys.matrix[0][3], 'n');
         assert_eq!(keys.matrix[1][2], 'v');
         assert_eq!(keys.map[&'n'], Pos::new(3, 0));

@@ -1,16 +1,19 @@
 use crate::Finger;
 
 #[derive(Debug, Clone, PartialEq)]
-/// Defines a direction between two fingers, where going from pinky to
-/// thumb is Inward, and going from thumb to pinky is Outward.
+/// Defines a direction between two fingers.
 pub enum Direction {
+    /// Goes from pinky to index.
     Inward,
+    /// Goes from index to pinky.
     Outward,
+    /// No direction. Usually when the two fingers are the same.
     None,
 }
 
 impl Direction {
     /// Returns the Direction from finger a to finger b.
+    /// # Example
     /// ```rust
     /// use keynergy::{Finger, Hand, FingerKind, Direction};
     /// let ri = Finger::new(Hand::Right, FingerKind::Index);

@@ -33,19 +33,25 @@
 <span id="31">31</span>
 <span id="32">32</span>
 <span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::Finger</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="doccomment">/// Defines a direction between two fingers, where going from pinky to</span>
-<span class="doccomment">/// thumb is Inward, and going from thumb to pinky is Outward.</span>
+<span class="doccomment">/// Defines a direction between two fingers.</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Direction</span> {
+    <span class="doccomment">/// Goes from pinky to index.</span>
     <span class="ident">Inward</span>,
+    <span class="doccomment">/// Goes from index to pinky.</span>
     <span class="ident">Outward</span>,
+    <span class="doccomment">/// No direction. Usually when the two fingers are the same.</span>
     <span class="prelude-val">None</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Direction</span> {
     <span class="doccomment">/// Returns the Direction from finger a to finger b.</span>
+    <span class="doccomment">/// # Example</span>
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// use keynergy::{Finger, Hand, FingerKind, Direction};</span>
     <span class="doccomment">/// let ri = Finger::new(Hand::Right, FingerKind::Index);</span>

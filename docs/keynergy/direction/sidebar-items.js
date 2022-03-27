@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Direction","Defines a direction between two fingers, where going from pinky to thumb is Inward, and going from thumb to pinky is Outward."]]});
+initSidebarItems({"enum":[["Direction","Defines a direction between two fingers."]]});
