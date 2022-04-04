@@ -152,7 +152,6 @@ impl<'a> Analyzer<'a> {
                     Some(f) => f,
                     None => continue,
                 };
-                println!("{:?} {} {:?}", pg, name, freq);
                 let total = totals.entry(name.clone()).or_insert(match amount {
                     MetricAmount::Boolean(_) => MetricTotal::Count(0),
                     MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
