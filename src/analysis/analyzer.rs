@@ -178,6 +178,11 @@ impl<'a> Analyzer<'a> {
         };
         r
     }
+    pub fn trace_err(&self, e: ketos::Error) {
+        self.interpreter
+            .display_trace(&ketos::trace::take_traceback().unwrap());
+        self.interpreter.display_error(&e);
+    }
 }
 
 /// Creates the default Ketos interpreter for metric extension
