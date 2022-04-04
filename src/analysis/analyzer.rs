@@ -82,7 +82,9 @@ impl<'a> Analyzer<'a> {
                 cpositions.insert(p, cp);
                 for a in &positions {
                     combinations.push(vec![p, *a]);
-                    combinations.push(vec![*a, p]);
+                    if *a != p {
+                        combinations.push(vec![*a, p]);
+                    }
                     for b in &positions {
                         combinations.push(vec![p, *a, *b]);
                         combinations.push(vec![*a, p, *b]);
