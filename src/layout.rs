@@ -64,6 +64,24 @@ impl From<io::Error> for LayoutError {
     }
 }
 
+impl fmt::Display for Keys {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let m = &self.matrix;
+        let mut s = String::new();
+        for r in m.iter() {
+            for (i, c) in r.iter().enumerate() {
+                s.push(*c);
+                s.push(' ');
+                if i == 4 {
+                    s.push(' ');
+                }
+            }
+            s.push('\n');
+        }
+        write!(f, "{}", s)
+    }
+}
+
 impl Keys {
     pub fn new(matrix: Vec<Vec<char>>, home_row: u8, thumb_row: Option<u8>) -> Self {
         let mut k = Keys {
