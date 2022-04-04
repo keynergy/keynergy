@@ -74,22 +74,22 @@ impl<'a> Analyzer<'a> {
             HashMap::with_capacity(kb.dimensions[0] * kb.dimensions[1]);
         let mut combinations: Vec<PosGroup> =
             Vec::with_capacity(kb.dimensions[0] * kb.dimensions[1] * 4);
+
+        // add all positions
         for x in 0..kb.dimensions[0] {
             for y in 0..kb.dimensions[1] {
                 let p = Pos::new(x, y);
                 positions.push(p.clone());
                 let cp = CombinedPos::from(kb, p);
                 cpositions.insert(p, cp);
-                for a in &positions {
-                    combinations.push(vec![p, *a]);
-                    if *a != p {
-                        combinations.push(vec![*a, p]);
-                    }
-                    for b in &positions {
-                        combinations.push(vec![p, *a, *b]);
-                        combinations.push(vec![*a, p, *b]);
-                        combinations.push(vec![*a, *b, p]);
-                    }
+            }
+        }
+
+        for a in &positions {
+            for b in &positions {
+                combinations.push(vec![*a, *b]);
+                for c in &positions {
+                    combinations.push(vec![*a, *b, *c]);
                 }
             }
         }
