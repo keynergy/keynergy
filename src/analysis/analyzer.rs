@@ -2,8 +2,7 @@ use crate::analysis::{
     AnalysisError, CombinedPos, CombinedPosGroup, ErrorType, InputType, Metric, MetricAmount,
     MetricList, MetricMap, MetricTotal,
 };
-use crate::{Keyboard, Keys, Pos, TextData};
-use itertools::Itertools;
+use crate::{Keyboard, Keys, Pos, PosGroup, TextData};
 use ketos::{Interpreter, Value};
 use std::collections::HashMap;
 
@@ -34,7 +33,13 @@ pub fn classify_ngram(
     );
     match result {
         Ok(Value::Bool(b)) => Ok(MetricAmount::Boolean(b)),
-        Ok(Value::Integer(i)) => Ok(MetricAmount::Scalar(i.to_f64().unwrap())),
+        Ok(Value::Integer(i)) => match i.to_f64() {
+            Some(f) => Ok(MetricAmount::Scalar(f)),
+            None => Err(AnalysisError {
+                metric: metric.function.clone(),
+                error: ErrorType::ReturnError(Value::Integer(i)),
+            }),
+        },
         Ok(Value::Float(f)) => Ok(MetricAmount::Scalar(f)),
         Err(e) => Err(AnalysisError {
             metric: metric.function.clone(),
@@ -65,33 +70,50 @@ impl<'a> Analyzer<'a> {
             .entry(kb.name.clone())
             .or_insert(HashMap::new());
         let mut positions: Vec<Pos> = Vec::with_capacity(kb.dimensions[0] * kb.dimensions[1]);
-        let mut cpositions: HashMap<Pos, CombinedPos> = HashMap::new();
+        let mut cpositions: HashMap<Pos, CombinedPos> =
+            HashMap::with_capacity(kb.dimensions[0] * kb.dimensions[1]);
+        let mut combinations: Vec<PosGroup> =
+            Vec::with_capacity(kb.dimensions[0] * kb.dimensions[1] * 4);
         for x in 0..kb.dimensions[0] {
             for y in 0..kb.dimensions[1] {
                 let p = Pos::new(x, y);
                 positions.push(p.clone());
-                cpositions.insert(p, CombinedPos::from(kb, p));
+                let cp = CombinedPos::from(kb, p);
+                cpositions.insert(p, cp);
+                for a in &positions {
+                    combinations.push(vec![p, *a]);
+                    combinations.push(vec![*a, p]);
+                    for b in &positions {
+                        combinations.push(vec![p, *a, *b]);
+                        combinations.push(vec![*a, p, *b]);
+                        combinations.push(vec![*a, *b, p]);
+                    }
+                }
             }
         }
 
-        for number in 2..3 {
-            for p in positions.iter().combinations(number) {
-                let mut amounts: Vec<(String, MetricAmount)> =
-                    Vec::with_capacity(self.metrics.bigrams.len());
-                let cpg: CombinedPosGroup = p
-                    .iter()
-                    .map(|x| cpositions.get(x).unwrap().clone())
-                    .collect();
-                for m in &self.metrics.bigrams {
-                    let amount = classify_ngram(&self.interpreter, &cpg, &m.1)?;
-                    if amount.some() {
-                        amounts.push((m.0.clone(), amount));
-                    }
+        for pg in combinations {
+            let number = pg.len();
+            let cpg: CombinedPosGroup = pg
+                .iter()
+                .filter_map(|x| cpositions.get(x))
+                .map(|x| x.to_owned())
+                .collect();
+            let mut amounts: Vec<(String, MetricAmount)> =
+                Vec::with_capacity(self.metrics.bigrams.len());
+            for m in if number == 2 {
+                &self.metrics.bigrams
+            } else {
+                &self.metrics.trigrams
+            } {
+                let amount = classify_ngram(&self.interpreter, &cpg, &m.1)?;
+                if amount.some() {
+                    amounts.push((m.0.clone(), amount));
                 }
-                let positions_vec: Vec<Pos> = p.iter().map(|x| **x).collect();
-                if amounts.len() > 0 {
-                    map.insert(positions_vec, amounts);
-                }
+            }
+            let positions_vec: Vec<Pos> = pg;
+            if amounts.len() > 0 {
+                map.insert(positions_vec, amounts);
             }
         }
         Ok(())
@@ -128,6 +150,7 @@ impl<'a> Analyzer<'a> {
                     Some(f) => f,
                     None => continue,
                 };
+                println!("{:?} {} {:?}", pg, name, freq);
                 let total = totals.entry(name.clone()).or_insert(match amount {
                     MetricAmount::Boolean(_) => MetricTotal::Count(0),
                     MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),

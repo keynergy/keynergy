@@ -113,12 +113,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "either"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
-
-[[package]]
 name = "fnv"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -162,15 +156,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "itertools"
-version = "0.7.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d47946d458e94a1b7bcabbf6521ea7c037062c81f534615abcad76e84d4970d"
-dependencies = [
- "either",
-]
-
-[[package]]
 name = "ketos"
 version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -197,9 +182,8 @@ dependencies = [
 
 [[package]]
 name = "keynergy"
-version = "0.2.3"
+version = "0.2.4"
 dependencies = [
- "itertools",
  "ketos",
  "ketos_derive",
  "serde",

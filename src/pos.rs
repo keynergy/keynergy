@@ -14,3 +14,4 @@ impl Pos {
 }
 
 pub type PosPair = [Pos; 2];
+pub type PosGroup = Vec<Pos>;

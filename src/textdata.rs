@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TextData {
     pub chars: HashMap<char, u64>,
     pub bigrams: HashMap<[char; 2], u64>,
@@ -15,6 +15,8 @@ impl TextData {
         let mut bigrams: HashMap<[char; 2], u64> = HashMap::with_capacity(30 * 30);
         let mut trigrams: HashMap<[char; 3], u64> = HashMap::with_capacity(30 * 30 * 15);
         let mut skip_1_grams: HashMap<[char; 2], u64> = HashMap::with_capacity(30 * 30);
+        let mut text = text;
+        text.push(' ');
         for v in text
             .chars()
             .map(|x| x.to_ascii_lowercase())

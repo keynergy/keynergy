@@ -11,10 +11,8 @@ pub use metrics::{InputType, Metric, MetricAmount, MetricList, MetricMap, Metric
 mod tests {
     use crate::{
         analysis::{Analyzer, InputType, Metric, MetricList, MetricTotal},
-        fingers::*,
-        Keyboard, Layout, TextData,
+        Keyboard, Keys, TextData,
     };
-    use std::collections::HashMap;
     #[test]
     fn classify() {
         let mut metrics = MetricList::new();
@@ -25,7 +23,7 @@ mod tests {
                 input: InputType::Bigram,
             },
         );
-        let td = TextData::from("queuestion".to_string());
+        let td = TextData::from("look under".to_string());
         let mut analyzer = Analyzer::with(metrics, &td);
         analyzer
             .interpreter
@@ -38,23 +36,11 @@ mod tests {
             )
             .unwrap();
 
-        let matrix = Keyboard {
-            name: "Matrix".to_string(),
-            rowstagger: vec![0.0, 0.0, 0.0],
-            colstagger: vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-            dimensions: [10, 3],
-            keyheight: 0.5,
-            fingers: vec![
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-            ],
-        };
+        let matrix = Keyboard::matrix();
 
-        let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
+        let qwerty = Keys::qwerty();
         analyzer.calculate_metrics(&matrix);
-        println!("{:?}", analyzer.keyboard_stats);
-        let result = analyzer.analyze_keys(matrix, semimak.formats.standard.unwrap());
-        assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(2));
+        let result = analyzer.analyze_keys(matrix, qwerty);
+        assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(4));
     }
 }

@@ -1,5 +1,5 @@
+use crate::fingers::*;
 use crate::{Finger, Pos};
-use std::collections::HashMap;
 
 /// Describes a physical keyboard and its properties.
 #[derive(Clone)]
@@ -29,23 +29,29 @@ impl Keyboard {
             - (self.colstagger[b.col as usize] + b.row as f64))
             .abs()
     }
+    pub fn matrix() -> Self {
+        Keyboard {
+            name: "Matrix".to_string(),
+            rowstagger: vec![0.0, 0.0, 0.0],
+            colstagger: vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            dimensions: [10, 3],
+            keyheight: 0.5,
+            fingers: vec![
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+            ],
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::{Keyboard, Pos};
-    use std::collections::HashMap;
 
     #[test]
     fn distance() {
-        let matrix = Keyboard {
-            name: "Matrix".to_string(),
-            rowstagger: vec![0.0, 0.0, 0.0],
-            colstagger: vec![0.0, 0.0, 0.0],
-            dimensions: [10, 3],
-            keyheight: 1.0,
-            fingers: vec![vec![]],
-        };
+        let matrix = Keyboard::matrix();
         assert_eq!(matrix.xdist(&Pos::new(0, 0), &Pos::new(1, 0)), 1.0);
         // shouldn't have any horizontal distance
         assert_eq!(matrix.xdist(&Pos::new(0, 0), &Pos::new(0, 1)), 0.0);
