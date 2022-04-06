@@ -179,8 +179,10 @@ impl<'a> Analyzer<'a> {
         r
     }
     pub fn trace_err(&self, e: ketos::Error) {
-        self.interpreter
-            .display_trace(&ketos::trace::take_traceback().unwrap());
+        if let Some(t) = &ketos::trace::take_traceback() {
+            self.interpreter.display_trace(t);
+        }
+
         self.interpreter.display_error(&e);
     }
 }
