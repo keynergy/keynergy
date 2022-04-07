@@ -1,4 +1,4 @@
-# keynergy-lib
+# keynergy
 This is the core library of the Keynergy project. It includes functionality for loading, modifying, and analyzing layouts. 
 
 It is used as the basis for [KLCord](https://github.com/keynergy/klcord), [layoutexport](https://github.com/keynergy/layoutexport), 
