@@ -55,5 +55,6 @@ mod tests {
         assert_eq!(*data.chars.get(&'l').unwrap(), 3);
         assert_eq!(*data.bigrams.get(&['l', 'd']).unwrap(), 1);
         assert_eq!(*data.trigrams.get(&['w', 'o', 'r']).unwrap(), 1);
+	assert_eq!(*data.skip_1_grams.get(&['w', 'r']).unwrap(), 1)
     }
 }
