@@ -31,7 +31,7 @@ impl TextData {
             }
             if v.len() == 3 {
                 let tg = trigrams.entry([v[0], v[1], v[2]]).or_insert(0);
-                let sg = skip_1_grams.entry([v[0], v[1]]).or_insert(0);
+                let sg = skip_1_grams.entry([v[0], v[2]]).or_insert(0);
                 *tg += 1;
                 *sg += 1;
             }
