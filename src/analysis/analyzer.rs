@@ -138,9 +138,14 @@ impl<'a> Analyzer<'a> {
                 .filter_map(|p| keys.pos_key(*p))
                 .map(|p| *p)
                 .collect();
-            for (name, amount) in metrics {
+	    // if the ngram can't be mapped onto the layout,
+	    // you can't check it
+	    if pg.len() != k.len() {
+		continue;
+	    }
+	    for (name, amount) in metrics {
                 let freq = match pg.len() {
-                    2 => match self.metrics.bigrams[name].input {
+                    2 => match self.metrics.bigrams.get(name).unwrap().input {
                         InputType::Bigram => self.data.bigrams.get(&pg[..]),
                         InputType::Skipgram => self.data.skip_1_grams.get(&pg[..]),
                         _ => Some(&0),
