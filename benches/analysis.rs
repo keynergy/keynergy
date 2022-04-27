@@ -1,9 +1,25 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use keynergy::analysis::{Analyzer, InputType, Metric, MetricList};
-use keynergy::{fingers::*, Fingermap, Keyboard, Layout, TextData};
-use std::collections::HashMap;
+use keynergy::{fingers::*, Keyboard, Layout, TextData};
 
-fn criterion_benchmark(c: &mut Criterion) {
+const TEXT: &'static str = "boat question saying trying, neighborhood";
+
+fn matrix() -> Keyboard {
+    Keyboard {
+        name: "Matrix".to_string(),
+        rowstagger: vec![0.0, 0.0, 0.0],
+        colstagger: vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        dimensions: [10, 3],
+        keyheight: 0.5,
+        fingers: vec![
+            vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+            vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+            vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+        ],
+    }
+}
+
+fn analyzer(textdata: &TextData) -> Analyzer<'_> {
     let mut metrics = MetricList::new();
     metrics.bigrams.insert(
         "SFB".to_string(),
@@ -12,15 +28,7 @@ fn criterion_benchmark(c: &mut Criterion) {
             input: InputType::Bigram,
         },
     );
-    c.bench_function("TextData::from", |b| {
-        b.iter(|| {
-            TextData::from(black_box(
-                "boat question saying trying, neighborhood".to_string(),
-            ))
-        })
-    });
-    let textdata = TextData::from("boat question saying trying, neighborhood".to_string());
-    let mut analyzer = Analyzer::with(metrics, textdata);
+    let analyzer = Analyzer::with(metrics, &textdata);
     analyzer
         .interpreter
         .run_code(
@@ -31,25 +39,31 @@ fn criterion_benchmark(c: &mut Criterion) {
             None,
         )
         .unwrap();
-    let matrix = Keyboard {
-        name: "Matrix".to_string(),
-        rowstagger: vec![0.0, 0.0, 0.0],
-        colstagger: vec![0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        dimensions: [10, 3],
-        keyheight: 0.5,
-        fingers: Fingermap {
-            matrix: vec![
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-                vec![LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
-            ],
-            map: HashMap::new(),
-        },
-    };
-    let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
+    analyzer
+}
+
+fn bench_text_data(c: &mut Criterion) {
+    c.bench_function("TextData::from", |b| {
+        b.iter(|| {
+            TextData::from(black_box(TEXT.to_string()))
+        })
+    });
+}
+
+fn bench_calculate_metrics(c: &mut Criterion) {
+    let textdata = TextData::from(TEXT.to_string());
+    let mut analyzer = analyzer(&textdata);
+    let matrix = matrix();
     c.bench_function("calculate_metrics", |b| {
         b.iter(|| analyzer.calculate_metrics(black_box(&matrix)))
     });
+}
+
+fn bench_analyze_keys(c: &mut Criterion) {
+    let textdata = TextData::from(TEXT.to_string());
+    let analyzer = analyzer(&textdata);
+    let matrix = matrix();
+    let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
     c.bench_function("analyze_keys", |b| {
         b.iter(|| {
             analyzer.analyze_keys(
@@ -60,5 +74,11 @@ fn criterion_benchmark(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, criterion_benchmark);
+fn bench(c: &mut Criterion) {
+    bench_text_data(c);
+    bench_calculate_metrics(c);
+    bench_analyze_keys(c);
+}
+
+criterion_group!(benches, bench);
 criterion_main!(benches);
