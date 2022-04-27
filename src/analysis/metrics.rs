@@ -1,6 +1,6 @@
 use crate::Pos;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum InputType {

@@ -1,6 +1,6 @@
 use crate::Pos;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 use std::error;
 use std::fmt;
 use std::fs;

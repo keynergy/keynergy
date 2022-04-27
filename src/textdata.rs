@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct TextData {

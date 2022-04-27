@@ -4,7 +4,7 @@ use crate::analysis::{
 };
 use crate::{Keyboard, Keys, Pos, PosGroup, TextData};
 use ketos::{Interpreter, Value};
-use std::collections::HashMap;
+use hashbrown::HashMap;
 
 /// An object that handles keyboard and layout analysis.
 pub struct Analyzer<'a> {
