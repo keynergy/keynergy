@@ -10,31 +10,24 @@ pub struct TextData {
 }
 
 impl TextData {
-    pub fn from(text: String) -> Self {
+    pub fn from(text: &str) -> Self {
         let mut chars: HashMap<char, u64> = HashMap::with_capacity(30);
         let mut bigrams: HashMap<[char; 2], u64> = HashMap::with_capacity(30 * 30);
         let mut trigrams: HashMap<[char; 3], u64> = HashMap::with_capacity(30 * 30 * 15);
         let mut skip_1_grams: HashMap<[char; 2], u64> = HashMap::with_capacity(30 * 30);
-        let mut text = text;
-        text.push(' ');
-        for v in text
-            .chars()
-            .map(|x| x.to_ascii_lowercase())
-            .collect::<Vec<char>>()
-            .windows(3)
-        {
-            let ch = chars.entry(v[0]).or_insert(0);
-            *ch += 1;
-            if v.len() >= 2 {
-                let bg = bigrams.entry([v[0], v[1]]).or_insert(0);
-                *bg += 1;
+        let mut iter = text.chars().map(|x| x.to_ascii_lowercase());
+        if let (Some(mut c1), Some(mut c2)) = (iter.next(), iter.next()) {
+            for c3 in iter {
+                *chars.entry(c1).or_insert(0) += 1;
+                *bigrams.entry([c1, c2]).or_insert(0) += 1;
+                *skip_1_grams.entry([c1, c3]).or_insert(0) += 1;
+                *trigrams.entry([c1, c2, c3]).or_insert(0) += 1;
+                c1 = c2;
+                c2 = c3;
             }
-            if v.len() == 3 {
-                let tg = trigrams.entry([v[0], v[1], v[2]]).or_insert(0);
-                let sg = skip_1_grams.entry([v[0], v[2]]).or_insert(0);
-                *tg += 1;
-                *sg += 1;
-            }
+            *chars.entry(c1).or_insert(0) += 1;
+            *chars.entry(c2).or_insert(0) += 1;
+            *bigrams.entry([c1, c2]).or_insert(0) += 1;
         }
         Self {
             chars,
@@ -51,7 +44,7 @@ mod tests {
 
     #[test]
     fn get_text_data() {
-        let data = TextData::from("Hello world!".to_string());
+        let data = TextData::from("Hello world!");
         assert_eq!(*data.chars.get(&'l').unwrap(), 3);
         assert_eq!(*data.bigrams.get(&['l', 'd']).unwrap(), 1);
         assert_eq!(*data.trigrams.get(&['w', 'o', 'r']).unwrap(), 1);

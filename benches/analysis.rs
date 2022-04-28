@@ -45,13 +45,13 @@ fn analyzer(textdata: &TextData) -> Analyzer<'_> {
 fn bench_text_data(c: &mut Criterion) {
     c.bench_function("TextData::from", |b| {
         b.iter(|| {
-            TextData::from(black_box(TEXT.to_string()))
+            TextData::from(black_box(TEXT))
         })
     });
 }
 
 fn bench_calculate_metrics(c: &mut Criterion) {
-    let textdata = TextData::from(TEXT.to_string());
+    let textdata = TextData::from(TEXT);
     let mut analyzer = analyzer(&textdata);
     let matrix = matrix();
     c.bench_function("calculate_metrics", |b| {
@@ -60,7 +60,7 @@ fn bench_calculate_metrics(c: &mut Criterion) {
 }
 
 fn bench_analyze_keys(c: &mut Criterion) {
-    let textdata = TextData::from(TEXT.to_string());
+    let textdata = TextData::from(TEXT);
     let analyzer = analyzer(&textdata);
     let matrix = matrix();
     let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
