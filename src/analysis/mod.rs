@@ -23,7 +23,7 @@ mod tests {
                 input: InputType::Bigram,
             },
         );
-        let td = TextData::from("look under".to_string());
+        let td = TextData::from("look under");
         let mut analyzer = Analyzer::with(metrics, &td);
         analyzer
             .interpreter
