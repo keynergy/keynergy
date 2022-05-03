@@ -64,11 +64,12 @@ fn bench_analyze_keys(c: &mut Criterion) {
     let analyzer = analyzer(&textdata);
     let matrix = matrix();
     let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
+    let keys = semimak.formats.standard.as_ref().unwrap();
     c.bench_function("analyze_keys", |b| {
         b.iter(|| {
             analyzer.analyze_keys(
-                black_box(matrix.clone()),
-                black_box(semimak.formats.standard.clone().unwrap()),
+                black_box(&matrix),
+                black_box(&keys),
             )
         })
     });
