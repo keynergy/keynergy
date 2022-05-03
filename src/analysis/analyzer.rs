@@ -125,7 +125,7 @@ impl<'a> Analyzer<'a> {
     /// keyboard and returns the metric totals. Returns None if the
     /// keyboard metrics for the given keyboard have not been
     /// calculated yet with calculate_metrics.
-    pub fn analyze_keys(&self, kb: Keyboard, keys: Keys) -> Option<HashMap<String, MetricTotal>> {
+    pub fn analyze_keys(&self, kb: &Keyboard, keys: &Keys) -> Option<HashMap<String, MetricTotal>> {
         let map = match self.keyboard_stats.get(&kb.name) {
             Some(m) => m,
             None => return None,

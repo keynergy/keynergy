@@ -140,7 +140,7 @@
 //! # println!("{:?}",analyzer.keyboard_stats);
 //! use keynergy::Keys;
 //! let qwerty = Keys::qwerty();
-//! let result = analyzer.analyze_keys(matrix, qwerty).unwrap();
+//! let result = analyzer.analyze_keys(&matrix, &qwerty).unwrap();
 //!
 //! use keynergy::analysis::MetricTotal;
 //! println!("{:?}", result);
