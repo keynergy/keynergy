@@ -18,6 +18,10 @@ ketos_derive = {version="0.12", optional = true}
 [dev-dependencies]
 criterion = "0.3.5"
 
+[[bench]]
+name = "analysis"
+harness = false
+
 [features]
 analysis = ["ketos", "ketos_derive"]
 

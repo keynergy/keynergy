@@ -55,7 +55,7 @@
 //!     input: InputType::Bigram,
 //!    },
 //! );
-//! let td = TextData::from("decided".to_string());
+//! let td = TextData::from("decided");
 //! let mut analyzer = Analyzer::with(metrics, &td);
 //! ```
 //! Next, the metric code is executed.
@@ -70,7 +70,7 @@
 //! #     input: InputType::Bigram,
 //! #    },
 //! # );
-//! # let td = TextData::from("decided".to_string());
+//! # let td = TextData::from("decided");
 //! # let mut analyzer = Analyzer::with(metrics, &td);
 //! analyzer
 //!   .interpreter
@@ -95,7 +95,7 @@
 //! #    input: InputType::Bigram,
 //! #   },
 //! # );
-//! # let td = TextData::from("decided".to_string());
+//! # let td = TextData::from("decided");
 //! # let mut analyzer = Analyzer::with(metrics, &td);
 //! # analyzer
 //! #   .interpreter
@@ -123,7 +123,7 @@
 //! #      input: InputType::Bigram,
 //! #     },
 //! # );
-//! # let td = TextData::from("decided".to_string());
+//! # let td = TextData::from("decided");
 //! # println!("{:?}", td);
 //! # let mut analyzer = Analyzer::with(metrics, &td);
 //! # analyzer
