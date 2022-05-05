@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use keynergy::analysis::{Analyzer, InputType, Metric, MetricList};
 use keynergy::{fingers::*, Keyboard, Layout, TextData};
 
-const TEXT: &'static str = "boat question saying trying, neighborhood";
+const TEXT: &'static str = include_str!("../src/lib.rs");
 
 fn matrix() -> Keyboard {
     Keyboard {
@@ -44,9 +44,7 @@ fn analyzer(textdata: &TextData) -> Analyzer<'_> {
 
 fn bench_text_data(c: &mut Criterion) {
     c.bench_function("TextData::from", |b| {
-        b.iter(|| {
-            TextData::from(black_box(TEXT))
-        })
+        b.iter(|| TextData::from(black_box(TEXT)))
     });
 }
 
@@ -61,17 +59,13 @@ fn bench_calculate_metrics(c: &mut Criterion) {
 
 fn bench_analyze_keys(c: &mut Criterion) {
     let textdata = TextData::from(TEXT);
-    let analyzer = analyzer(&textdata);
+    let mut analyzer = analyzer(&textdata);
     let matrix = matrix();
     let semimak = Layout::load("testdata/semimak_jq.toml").unwrap();
     let keys = semimak.formats.standard.as_ref().unwrap();
+    analyzer.calculate_metrics(&matrix);
     c.bench_function("analyze_keys", |b| {
-        b.iter(|| {
-            analyzer.analyze_keys(
-                black_box(&matrix),
-                black_box(&keys),
-            )
-        })
+        b.iter(|| analyzer.analyze_keys(black_box(&matrix), black_box(&keys)))
     });
 }
 

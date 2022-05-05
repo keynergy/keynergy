@@ -138,12 +138,12 @@ impl<'a> Analyzer<'a> {
                 .filter_map(|p| keys.pos_key(*p))
                 .map(|p| *p)
                 .collect();
-	    // if the ngram can't be mapped onto the layout,
-	    // you can't check it
-	    if pg.len() != k.len() {
-		continue;
-	    }
-	    for (name, amount) in metrics {
+            // if the ngram can't be mapped onto the layout,
+            // you can't check it
+            if pg.len() != k.len() {
+                continue;
+            }
+            for (name, amount) in metrics {
                 let freq = match pg.len() {
                     2 => match self.metrics.bigrams.get(name).unwrap().input {
                         InputType::Bigram => self.data.bigrams.get(&pg[..]),
@@ -161,7 +161,7 @@ impl<'a> Analyzer<'a> {
                     MetricAmount::Boolean(_) => MetricTotal::Count(0),
                     MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
                 });
-                *total = total.clone().add(amount.clone(), *freq);
+                total.add_mut(amount.clone(), *freq);
             }
         }
         Some(totals)
