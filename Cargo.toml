@@ -29,3 +29,6 @@ analysis = ["ketos", "ketos_derive"]
 # Features to pass to Cargo (default: [])
 features = ["analysis"]
 
+[[example]]
+name = "analysis"
+required-features = ["analysis"]
