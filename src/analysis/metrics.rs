@@ -70,6 +70,18 @@ impl MetricTotal {
             },
         }
     }
+    pub fn add_mut(&mut self, amount: MetricAmount, scale: u64) {
+        match self {
+            Self::Count(ref mut c) => match amount {
+                MetricAmount::Boolean(a) => *self = Self::Count(*c + if a { scale } else { 0 }),
+                _ => (),
+            },
+            Self::Scalar(ref mut s) => match amount {
+                MetricAmount::Scalar(a) => *self = Self::Scalar(*s + (a * scale as f64)),
+                _ => (),
+            },
+        };
+    }
 }
 impl MetricAmount {
     pub fn some(&self) -> bool {

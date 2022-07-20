@@ -40,7 +40,7 @@ mod tests {
 
         let qwerty = Keys::qwerty();
         analyzer.calculate_metrics(&matrix);
-        let result = analyzer.analyze_keys(matrix, qwerty);
+        let result = analyzer.analyze_keys(&matrix, &qwerty);
         assert_eq!(*result.unwrap().get("SFB").unwrap(), MetricTotal::Count(4));
     }
 }

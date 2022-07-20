@@ -125,7 +125,7 @@ impl<'a> Analyzer<'a> {
     /// keyboard and returns the metric totals. Returns None if the
     /// keyboard metrics for the given keyboard have not been
     /// calculated yet with calculate_metrics.
-    pub fn analyze_keys(&self, kb: Keyboard, keys: Keys) -> Option<HashMap<String, MetricTotal>> {
+    pub fn analyze_keys(&self, kb: &Keyboard, keys: &Keys) -> Option<HashMap<String, MetricTotal>> {
         let map = match self.keyboard_stats.get(&kb.name) {
             Some(m) => m,
             None => return None,
@@ -138,12 +138,12 @@ impl<'a> Analyzer<'a> {
                 .filter_map(|p| keys.pos_key(*p))
                 .map(|p| *p)
                 .collect();
-	    // if the ngram can't be mapped onto the layout,
-	    // you can't check it
-	    if pg.len() != k.len() {
-		continue;
-	    }
-	    for (name, amount) in metrics {
+            // if the ngram can't be mapped onto the layout,
+            // you can't check it
+            if pg.len() != k.len() {
+                continue;
+            }
+            for (name, amount) in metrics {
                 let freq = match pg.len() {
                     2 => match self.metrics.bigrams.get(name).unwrap().input {
                         InputType::Bigram => self.data.bigrams.get(&pg[..]),
@@ -161,7 +161,7 @@ impl<'a> Analyzer<'a> {
                     MetricAmount::Boolean(_) => MetricTotal::Count(0),
                     MetricAmount::Scalar(_) => MetricTotal::Scalar(0.0),
                 });
-                *total = total.clone().add(amount.clone(), *freq);
+                total.add_mut(amount.clone(), *freq);
             }
         }
         Some(totals)
