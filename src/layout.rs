@@ -12,6 +12,7 @@ use toml;
 pub struct Formats {
     pub standard: Option<Keys>,
     pub angle: Option<Keys>,
+    pub angle_preferred: Option<bool>,
 }
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
@@ -123,6 +124,12 @@ impl Layout {
             layout.link = None;
         }
         Ok(layout)
+    }
+    pub fn angle_is_preferred(&self) -> bool {
+	match self.formats.angle_preferred {
+	    Some(true) => true,
+	    _ => false
+	}
     }
 }
 
