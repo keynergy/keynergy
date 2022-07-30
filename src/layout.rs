@@ -4,9 +4,9 @@ use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::fs;
-use std::path::Path;
 use std::io;
 use std::mem;
+use std::path::Path;
 use toml;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -127,10 +127,10 @@ impl Layout {
         Ok(layout)
     }
     pub fn angle_is_preferred(&self) -> bool {
-	match self.formats.angle_preferred {
-	    Some(true) => true,
-	    _ => false
-	}
+        match self.formats.angle_preferred {
+            Some(true) => true,
+            _ => false,
+        }
     }
 }
 
