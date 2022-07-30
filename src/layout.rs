@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use std::error;
 use std::fmt;
 use std::fs;
+use std::path::Path;
 use std::io;
 use std::mem;
 use toml;
@@ -109,7 +110,7 @@ impl Layout {
     /// let l = keynergy::Layout::load("testdata/semimak_jq.toml").unwrap();
     /// assert_eq!(l.name, "Semimak JQ");
     /// ```
-    pub fn load(path: &str) -> Result<Layout, LayoutError> {
+    pub fn load<P: AsRef<Path>>(path: P) -> Result<Layout, LayoutError> {
         // read file
         let file = fs::read_to_string(path)?;
         let result = toml::from_str(&file);
