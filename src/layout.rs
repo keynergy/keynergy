@@ -27,7 +27,7 @@ pub struct Layout {
     /// Year that the layout was released in
     pub year: u32,
     /// Language the layout was made for
-    #[serde(default = default_language)]
+    #[serde(default = "default_language")]
     pub language: String,
     pub formats: Formats,
 }
